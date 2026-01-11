@@ -15,8 +15,9 @@ const Dashboard = () => {
         loadApps();
     }, []);
 
-    const loadApps = () => {
-        setApplications(getApplications());
+    const loadApps = async () => {
+        const data = await getApplications();
+        setApplications(data);
     };
 
     const handleAddNew = () => {
@@ -36,16 +37,16 @@ const Dashboard = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm('Excluir esta candidatura?')) {
-            deleteApplication(id);
+            await deleteApplication(id);
             loadApps();
         }
     };
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        saveApplication(currentApp);
+        await saveApplication(currentApp);
         setIsModalOpen(false);
         loadApps();
     };
@@ -56,16 +57,16 @@ const Dashboard = () => {
 
     // Resumo de status
     const statusList = [
-      'Pendente',
-      'Entrevista RH',
-      'Segunda Entrevista',
-      'Aprovado',
-      'Rejeitado'
+        'Pendente',
+        'Entrevista RH',
+        'Segunda Entrevista',
+        'Aprovado',
+        'Rejeitado'
     ];
     const total = applications.length;
     const statusCount = statusList.reduce((acc, status) => {
-      acc[status] = applications.filter(app => app.status === status).length;
-      return acc;
+        acc[status] = applications.filter(app => app.status === status).length;
+        return acc;
     }, {});
 
     return (
@@ -82,10 +83,10 @@ const Dashboard = () => {
 
                 {/* Resumo de candidaturas */}
                 <div style={{ background: '#f5f7fa', borderRadius: 12, padding: '1.2rem 1.5rem', marginBottom: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', gap: '2.5rem', flexWrap: 'wrap' }}>
-                  <div><b>Total:</b> {total}</div>
-                  {statusList.map(status => (
-                    <div key={status}><b>{status}:</b> {statusCount[status]}</div>
-                  ))}
+                    <div><b>Total:</b> {total}</div>
+                    {statusList.map(status => (
+                        <div key={status}><b>{status}:</b> {statusCount[status]}</div>
+                    ))}
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>

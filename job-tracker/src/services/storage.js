@@ -1,59 +1,45 @@
-const APPS_KEY = 'job_tracker_apps';
+import api from './api';
+
 const PROFILE_KEY = 'job_tracker_profile';
 
-const initialApps = [
-  {
-    id: '1',
-    company: 'Google',
-    role: 'Engenheiro Frontend',
-    link: 'https://careers.google.com',
-    date: '2023-10-15',
-    status: 'Entrevista RH',
-    notes: 'Primeira etapa foi boa. Aguardando feedback.',
-  },
-  {
-    id: '2',
-    company: 'Spotify',
-    role: 'Desenvolvedor Web',
-    link: 'https://www.lifeatspotify.com/',
-    date: '2023-10-20',
-    status: 'Pendente',
-    notes: 'Aplicado via indicação.',
+export const getApplications = async () => {
+  try {
+    const response = await api.get('/vagas');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching applications:', error);
+    return [];
   }
-];
-
-export const getApplications = () => {
-  const data = localStorage.getItem(APPS_KEY);
-  if (!data) {
-    localStorage.setItem(APPS_KEY, JSON.stringify(initialApps));
-    return initialApps;
-  }
-  return JSON.parse(data);
 };
 
-export const saveApplication = (app) => {
-  const apps = getApplications();
-  if (app.id) {
-    // Edit
-    const index = apps.findIndex(a => a.id === app.id);
-    if (index !== -1) {
-      apps[index] = app;
+export const saveApplication = async (app) => {
+  try {
+    if (app.id) {
+      // Edit
+      const response = await api.put(`/vagas/${app.id}`, app);
+      return response.data;
+    } else {
+      // Add
+      const response = await api.post('/vagas', app);
+      return response.data;
     }
-  } else {
-    // Add
-    app.id = Date.now().toString();
-    apps.push(app);
+  } catch (error) {
+    console.error('Error saving application:', error);
+    throw error;
   }
-  localStorage.setItem(APPS_KEY, JSON.stringify(apps));
-  return app;
 };
 
-export const deleteApplication = (id) => {
-  const apps = getApplications();
-  const newApps = apps.filter(a => a.id !== id);
-  localStorage.setItem(APPS_KEY, JSON.stringify(newApps));
+export const deleteApplication = async (id) => {
+  try {
+    await api.delete(`/vagas/${id}`);
+    return true;
+  } catch (error) {
+    console.error('Error deleting application:', error);
+    throw error;
+  }
 };
 
+// Mantemos o perfil no localStorage por enquanto, ou poderíamos mover para o backend também
 export const getProfile = () => {
   const data = localStorage.getItem(PROFILE_KEY);
   return data ? JSON.parse(data) : {

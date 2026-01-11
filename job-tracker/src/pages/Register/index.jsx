@@ -13,13 +13,13 @@ const Register = () => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = register(formData.email, formData.password, formData.name);
+        const result = await register(formData.email, formData.password, formData.name);
         if (result.success) {
-            navigate('/dashboard');
+            navigate('/login');
         } else {
-            setError('Falha no cadastro');
+            setError(result.message || 'Falha no cadastro');
         }
     };
 
