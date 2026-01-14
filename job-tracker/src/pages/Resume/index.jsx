@@ -8,12 +8,11 @@ import './Resume.css';
 
 
 
-
 const Resume = () => {
-  // Dados do currículo - ESTRUTURADO PARA ATS / WORD CLÁSSICO
+  // DBA-focused resume — ATS / Word friendly
   const resumeData = {
     name: "Jose Vinicius Lourenço",
-    role: "Python Developer | Data & Cloud Engineer (AWS)",
+    role: "Junior Database Administrator | SQL & Oracle",
 
     contact: {
       location: "Brazil (Open to Remote)",
@@ -21,48 +20,68 @@ const Resume = () => {
       github: "github.com/ViniScooper",
     },
 
-    summary: `Python Developer with experience in data-oriented solutions, database systems, and automation. Strong background in SQL, data manipulation, and backend development, with growing hands-on experience in Python scripting, cloud-based data pipelines, and AWS services. Experienced in collaborating with cross-functional teams to deliver scalable, well-documented, and reliable data solutions.`,
+    summary: `
+Junior Database Administrator with hands-on experience in Oracle databases,
+SQL development, and enterprise ERP environments. Strong background in data
+manipulation, database support, and production environments. Experience working
+with Oracle, SAP ERP, and TOTVS systems, supporting business-critical data
+operations, troubleshooting issues, and ensuring data reliability and security.
+Comfortable collaborating with development and business teams.
+    `,
 
     skills: [
-      "Python Development",
-      "Data Processing & Automation",
-      "SQL Development",
-      "ETL / ELT Concepts",
-      "PySpark Fundamentals",
-      "AWS Glue (Fundamentals)",
-      "AWS S3, Lambda, IAM (Conceptual & Hands-on)",
-      "Cloud Data Pipelines",
-      "Relational & Non-Relational Databases",
-      "API Integration (REST)",
+      "Oracle Database Administration (Junior)",
+      "SQL Query Development & Optimization",
+      "Database Monitoring & Troubleshooting",
+      "PL/SQL (Basic)",
+      "Data Validation & Integrity",
+      "Backup & Recovery Concepts",
+      "ERP Systems (TOTVS / SAP)",
+      "ADVPL (TOTVS)",
+      "SAP ABAP (Basic)",
+      "Production & Pre-production Environments",
+      "Linux Fundamentals",
       "Git Version Control",
-      "Data Modeling",
-      "Monitoring & Troubleshooting",
       "Documentation & Best Practices"
     ],
 
     experience: [
       {
-        role: "Junior Oracle Database Administrator / Software Developer",
+        role: "Junior Oracle Database Administrator",
+        company: "informa software",
         period: "2024 – Present",
         bullets: [
-          "Develop Python scripts to support data extraction, transformation, and automation tasks",
+          "Support Oracle database operations in production and pre-production environments",
           "Write and optimize SQL queries for data analysis, validation, and reporting",
-          "Support data pipelines and database processes in production and preproduction environments",
-          "Collaborate with teams to translate business requirements into technical data solutions",
-          "Monitor data processes, troubleshoot failures, and ensure data reliability",
-          "Work with cloud and on-premise data sources following security and access control practices",
-          "Document data flows, scripts, and operational procedures",
-          "Prepare datasets for analytics and visualization using Power BI"
+          "Assist with database monitoring, troubleshooting, and incident resolution",
+          "Support data consistency and integrity across enterprise systems",
+          "Collaborate with development and business teams to understand data requirements",
+          "Follow security and access control best practices for database environments",
+          "Document database procedures, queries, and operational processes"
+        ],
+      },
+      {
+        role: "Software Developer",
+        company: "Coderp",
+        period: "2022 – 2023",
+        bullets: [
+          "Worked on enterprise software solutions using TOTVS systems",
+          "Developed and maintained business logic using ADVPL",
+          "Assisted in database-related tasks, including SQL queries and data validation",
+          "Supported system integrations and data consistency across modules",
+          "Collaborated with analysts and senior developers on maintenance and enhancements"
         ],
       },
       {
         role: "Software Development Intern",
-        period: "2020 – 2022",
+        company: "KARNE&KEIJO",
+        period: "2021 – 2022",
         bullets: [
-          "Developed and maintained scripts and small applications using Python and SQL",
-          "Assisted in data validation, transformation, and reporting processes",
-          "Collaborated with technical teams on system integration and data consistency",
-          "Used Git for version control and followed coding best practices"
+          "Worked with SAP ERP systems during internship period",
+          "Developed and maintained simple programs using ABAP",
+          "Assisted with data extraction, validation, and reporting tasks",
+          "Supported functional teams with technical and data-related activities",
+          "Learned enterprise system workflows and database concepts"
         ],
       }
     ],
