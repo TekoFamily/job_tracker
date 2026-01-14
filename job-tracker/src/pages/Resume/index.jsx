@@ -1,76 +1,181 @@
 
 import React from 'react';
+import './Resume.css';
+
+
+
+
+
+
 
 
 const Resume = () => {
-  // Função para voltar à página anterior
-  const handleBack = () => {
-    window.history.back();
+  // Dados do currículo - ESTRUTURADO PARA ATS / WORD CLÁSSICO
+  const resumeData = {
+    name: "Jose Vinicius Lourenço",
+    role: "Python Developer | Data & Cloud Engineer (AWS)",
+
+    contact: {
+      location: "Brazil (Open to Remote)",
+      linkedin: "linkedin.com/in/jose-vinicius-lourenço-1a6b9014a",
+      github: "github.com/ViniScooper",
+    },
+
+    summary: `Python Developer with experience in data-oriented solutions, database systems, and automation. Strong background in SQL, data manipulation, and backend development, with growing hands-on experience in Python scripting, cloud-based data pipelines, and AWS services. Experienced in collaborating with cross-functional teams to deliver scalable, well-documented, and reliable data solutions.`,
+
+    skills: [
+      "Python Development",
+      "Data Processing & Automation",
+      "SQL Development",
+      "ETL / ELT Concepts",
+      "PySpark Fundamentals",
+      "AWS Glue (Fundamentals)",
+      "AWS S3, Lambda, IAM (Conceptual & Hands-on)",
+      "Cloud Data Pipelines",
+      "Relational & Non-Relational Databases",
+      "API Integration (REST)",
+      "Git Version Control",
+      "Data Modeling",
+      "Monitoring & Troubleshooting",
+      "Documentation & Best Practices"
+    ],
+
+    experience: [
+      {
+        role: "Junior Oracle Database Administrator / Software Developer",
+        period: "2024 – Present",
+        bullets: [
+          "Develop Python scripts to support data extraction, transformation, and automation tasks",
+          "Write and optimize SQL queries for data analysis, validation, and reporting",
+          "Support data pipelines and database processes in production and preproduction environments",
+          "Collaborate with teams to translate business requirements into technical data solutions",
+          "Monitor data processes, troubleshoot failures, and ensure data reliability",
+          "Work with cloud and on-premise data sources following security and access control practices",
+          "Document data flows, scripts, and operational procedures",
+          "Prepare datasets for analytics and visualization using Power BI"
+        ],
+      },
+      {
+        role: "Software Development Intern",
+        period: "2020 – 2022",
+        bullets: [
+          "Developed and maintained scripts and small applications using Python and SQL",
+          "Assisted in data validation, transformation, and reporting processes",
+          "Collaborated with technical teams on system integration and data consistency",
+          "Used Git for version control and followed coding best practices"
+        ],
+      }
+    ],
+
+    education: "Bachelor’s Degree in Computer Science",
+
+    languages: [
+      "Portuguese – Native",
+      "English – Professional Working Proficiency",
+      "Spanish – Basic"
+    ],
   };
 
-  // Função para imprimir/salvar PDF
-  const handlePrint = () => {
-    window.print();
-  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  const handleBack = () => window.history.back();
+  const handlePrint = () => window.print();
 
   return (
-    <div style={{ maxWidth: 600, margin: '3rem auto', fontFamily: 'Arial, sans-serif', color: '#222', background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', padding: '2.5rem 2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <button
-          onClick={handleBack}
-          style={{
-            padding: '0.7rem 1.5rem',
-            fontSize: '1rem',
-            cursor: 'pointer',
-            borderRadius: 8,
-            border: 'none',
-            background: '#1976d2',
-            color: '#fff',
-            fontWeight: 600,
-            boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)',
-            transition: 'background 0.2s',
-          }}
-          onMouseOver={e => e.currentTarget.style.background = '#1565c0'}
-          onMouseOut={e => e.currentTarget.style.background = '#1976d2'}
-        >Voltar</button>
-        <button
-          onClick={handlePrint}
-          style={{
-            padding: '0.7rem 1.5rem',
-            fontSize: '1rem',
-            cursor: 'pointer',
-            borderRadius: 8,
-            border: 'none',
-            background: '#43a047',
-            color: '#fff',
-            fontWeight: 600,
-            boxShadow: '0 2px 8px rgba(67, 160, 71, 0.08)',
-            transition: 'background 0.2s',
-          }}
-          onMouseOver={e => e.currentTarget.style.background = '#388e3c'}
-          onMouseOut={e => e.currentTarget.style.background = '#43a047'}
-        >Salvar PDF</button>
+    <div className="resume-container">
+      <div className="actions-bar no-print">
+        <button onClick={handleBack} className="btn">
+          Back
+        </button>
+        <button onClick={handlePrint} className="btn">
+          Save/Print PDF
+        </button>
       </div>
-      <h1 style={{ fontSize: '2.2rem', marginBottom: '0.5rem', fontWeight: 700 }}>João da Silva</h1>
-      <p style={{ margin: '0.5rem 0' }}><b>Email:</b> joao.silva@email.com</p>
-      <p style={{ margin: '0.5rem 0' }}><b>Idade:</b> 28 anos</p>
-      <p style={{ margin: '0.5rem 0 1.2rem 0' }}><b>Cargo pretendido:</b> Desenvolvedor Front-End</p>
-      <hr style={{ margin: '1.2rem 0' }} />
-      <p style={{ margin: '0.5rem 0' }}><b>Resumo:</b> Profissional dedicado com experiência em desenvolvimento web, focado em criar interfaces intuitivas e responsivas.</p>
-      <hr style={{ margin: '1.2rem 0' }} />
-      <p style={{ margin: '0.5rem 0' }}><b>Experiência:</b><br />
-        Empresa ABC (2022-2024) - Desenvolvedor Front-End<br />
-        - Desenvolvimento de aplicações React<br />
-        - Colaboração com equipes de UI/UX
-      </p>
-      <hr style={{ margin: '1.2rem 0' }} />
-      <p style={{ margin: '0.5rem 0' }}><b>Formação:</b><br />
-        Bacharel em Ciência da Computação - Universidade XYZ (2018-2022)
-      </p>
-      <hr style={{ margin: '1.2rem 0' }} />
-      <p style={{ margin: '0.5rem 0' }}><b>Habilidades:</b><br />
-        JavaScript, React, HTML, CSS, Git
-      </p>
+
+      <div className="resume-paper">
+        {/* HEADER - CENTERED */}
+        <header className="resume-header">
+          <h1 className="resume-name">{resumeData.name}</h1>
+          <div className="resume-role">{resumeData.role}</div>
+
+          <div className="resume-contact">
+            {resumeData.contact.location} | {resumeData.contact.linkedin} | {resumeData.contact.github}
+          </div>
+        </header>
+
+        {/* SUMMARY */}
+        <section className="resume-section">
+          <div className="section-title">Professional Summary</div>
+          <div className="section-content">
+            {resumeData.summary}
+          </div>
+        </section>
+
+        {/* SKILLS - TWO COLUMNS */}
+        <section className="resume-section">
+          <div className="section-title">Skills & Keywords</div>
+          <ul className="skills-grid">
+            {resumeData.skills.map((skill, i) => (
+              <li key={i}>{skill}</li>
+            ))}
+          </ul>
+        </section>
+
+        {/* EXPERIENCE */}
+        <section className="resume-section">
+          <div className="section-title">Professional Experience</div>
+
+          {resumeData.experience.map((job, i) => (
+            <div key={i} className="job-entry">
+              <div className="job-header">
+                <span>{job.role}</span>
+                <span className="job-period">{job.period}</span>
+              </div>
+              <ul className="job-bullets">
+                {job.bullets.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+
+        {/* EDUCATION */}
+        <section className="resume-section">
+          <div className="section-title">Education</div>
+          <div className="section-content">
+            {resumeData.education}
+          </div>
+        </section>
+
+        {/* LANGUAGES */}
+        <section className="resume-section">
+          <div className="section-title">Languages</div>
+          <div className="section-content">
+            {resumeData.languages.join(" • ")}
+          </div>
+        </section>
+      </div>
     </div>
   );
 };
