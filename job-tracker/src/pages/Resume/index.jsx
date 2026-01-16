@@ -8,107 +8,125 @@ import './Resume.css';
 
 
 
+
+
+
+
+
+
+
 const Resume = () => {
-  // DBA-focused resume — ATS / Word friendly
   const resumeData = {
-    name: "Jose Vinicius Lourenço",
-    role: "Junior Database Administrator | SQL & Oracle",
+    name: "Eliane Maia Bispo",
+    role: "Administrativo – Saúde e Educação",
 
     contact: {
-      location: "Brazil (Open to Remote)",
-      linkedin: "linkedin.com/in/jose-vinicius-lourenço-1a6b9014a",
-      github: "github.com/ViniScooper",
+      email: "elianemaiabispo@gmail.com",
+      phone: "(81) 99542-5342",
+      location: "Recife – PE, Brasil",
+      address: "Rua Genvásio Fioravante, 92 – Bairro Graças",
+      linkedin: "",
+      github: "",
+      maritalStatus: "Casada"
     },
 
     summary: `
-Junior Database Administrator with hands-on experience in Oracle databases,
-SQL development, and enterprise ERP environments. Strong background in data
-manipulation, database support, and production environments. Experience working
-with Oracle, SAP ERP, and TOTVS systems, supporting business-critical data
-operations, troubleshooting issues, and ensuring data reliability and security.
-Comfortable collaborating with development and business teams.
+Sou uma pessoa responsável e dedicada, com experiência na área administrativa, especialmente nos setores de educação e apoio social. Trabalhei em escola estadual, associação cultural e com consultoria na área de restaurante, atuando com organização de documentos, controle de almoxarifado, atendimento ao público e apoio às rotinas administrativas.
+
+Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da saúde e educação, onde possa contribuir com organização, compromisso e responsabilidade. Atualmente estou finalizando o curso de Serviço Social e curso Nutrição, com interesse em crescer profissionalmente e aprender continuamente.
     `,
 
     skills: [
-      "Oracle Database Administration (Junior)",
-      "SQL Query Development & Optimization",
-      "Database Monitoring & Troubleshooting",
-      "PL/SQL (Basic)",
-      "Data Validation & Integrity",
-      "Backup & Recovery Concepts",
-      "ERP Systems (TOTVS / SAP)",
-      "ADVPL (TOTVS)",
-      "SAP ABAP (Basic)",
-      "Production & Pre-production Environments",
-      "Linux Fundamentals",
-      "Git Version Control",
-      "Documentation & Best Practices"
+      "Organização de documentos",
+      "Atendimento ao público e telefônico",
+      "Controle de agenda e compromissos",
+      "Apoio em rotinas administrativas",
+      "Arquivo físico e digital",
+      "Almoxarifado e controle de materiais",
+      "Digitação e elaboração de textos simples",
+      "Uso básico de computador",
+      "Microsoft Word (básico)",
+      "Microsoft Excel (básico)",
+      "E-mail profissional",
+      "Pontualidade e responsabilidade",
+      "Trabalho em equipe"
     ],
 
     experience: [
       {
-        role: "Junior Oracle Database Administrator",
-        company: "informa software",
-        period: "2024 – Present",
+        role: "Auxiliar Administrativa / Almoxarifado",
+        company: "E.E.E. Augusto dos Anjos – Escola Estadual de Ensino Fundamental",
+        location: "Campina Grande – Paraíba",
+        period: "2 anos",
         bullets: [
-          "Support Oracle database operations in production and pre-production environments",
-          "Write and optimize SQL queries for data analysis, validation, and reporting",
-          "Assist with database monitoring, troubleshooting, and incident resolution",
-          "Support data consistency and integrity across enterprise systems",
-          "Collaborate with development and business teams to understand data requirements",
-          "Follow security and access control best practices for database environments",
-          "Document database procedures, queries, and operational processes"
+          "Controle e organização de materiais e estoque no almoxarifado escolar",
+          "Apoio direto às rotinas administrativas da escola",
+          "Organização de documentos e arquivos",
+          "Atendimento interno e suporte aos processos da unidade de ensino"
         ],
       },
       {
-        role: "Software Developer",
-        company: "Coderp",
-        period: "2022 – 2023",
+        role: "Auxiliar Administrativa",
+        company: "Consultoria de Restaurante – Seu Pêo",
+        period: "1 ano",
         bullets: [
-          "Worked on enterprise software solutions using TOTVS systems",
-          "Developed and maintained business logic using ADVPL",
-          "Assisted in database-related tasks, including SQL queries and data validation",
-          "Supported system integrations and data consistency across modules",
-          "Collaborated with analysts and senior developers on maintenance and enhancements"
+          "Apoio na organização administrativa",
+          "Controle de materiais e insumos",
+          "Auxílio na rotina operacional",
+          "Organização de processos internos"
         ],
       },
       {
-        role: "Software Development Intern",
-        company: "KARNE&KEIJO",
-        period: "2021 – 2022",
+        role: "Auxiliar Administrativa",
+        company: "Associação Cultural Madre Agatha",
+        period: "6 meses",
         bullets: [
-          "Worked with SAP ERP systems during internship period",
-          "Developed and maintained simple programs using ABAP",
-          "Assisted with data extraction, validation, and reporting tasks",
-          "Supported functional teams with technical and data-related activities",
-          "Learned enterprise system workflows and database concepts"
+          "Atendimento ao público",
+          "Suporte administrativo às atividades culturais",
+          "Organização de documentos",
+          "Auxílio na rotina interna da associação"
         ],
       }
     ],
 
-    education: "Bachelor’s Degree in Computer Science",
+    education: [
+      {
+        course: "Serviço Social",
+        institution: "Faculdade Metropolitana de Franca",
+        status: "Cursando – fase final do curso"
+      },
+      {
+        course: "Nutrição",
+        institution: "Unigrande Recife",
+        status: "Cursando – 1º período"
+      }
+    ],
 
     languages: [
-      "Portuguese – Native",
-      "English – Professional Working Proficiency",
-      "Spanish – Basic"
+      "Português – Nativo"
     ],
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -138,7 +156,17 @@ Comfortable collaborating with development and business teams.
           <div className="resume-role">{resumeData.role}</div>
 
           <div className="resume-contact">
-            {resumeData.contact.location} | {resumeData.contact.linkedin} | {resumeData.contact.github}
+            {resumeData.contact.email} | {resumeData.contact.phone} | {resumeData.contact.location}<br />
+            {resumeData.contact.address}<br />
+            {resumeData.contact.linkedin && (
+              <span>LinkedIn: {resumeData.contact.linkedin} | </span>
+            )}
+            {resumeData.contact.github && (
+              <span>GitHub: {resumeData.contact.github} | </span>
+            )}
+            {resumeData.contact.maritalStatus && (
+              <span>{resumeData.contact.maritalStatus}</span>
+            )}
           </div>
         </header>
 
@@ -183,7 +211,13 @@ Comfortable collaborating with development and business teams.
         <section className="resume-section">
           <div className="section-title">Education</div>
           <div className="section-content">
-            {resumeData.education}
+            {resumeData.education.map((edu, i) => (
+              <div key={i} style={{ marginBottom: 6 }}>
+                <strong>{edu.course}</strong><br />
+                {edu.institution}<br />
+                <em>{edu.status}</em>
+              </div>
+            ))}
           </div>
         </section>
 
