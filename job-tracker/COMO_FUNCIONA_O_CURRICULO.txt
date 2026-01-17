@@ -1,0 +1,65 @@
+
+# SISTEMA DE CURRÍCULO DINÂMICO - DOCUMENTAÇÃO
+
+Este documento descreve o funcionamento, as tecnologias e as funcionalidades do sistema de currículo dinâmico desenvolvido para o Job Tracker.
+
+## 1. OBJETIVO DO SISTEMA
+O sistema foi criado para permitir que o usuário gerencie seu currículo de forma visual e intuitiva, eliminando a necessidade de editar código fonte para atualizar informações. Ele foca em agilidade, persistência de dados local e exportação profissional (ATS-friendly).
+
+---
+
+## 2. TECNOLOGIAS UTILIZADAS
+
+### Frontend Core:
+*   **React.js**: Biblioteca principal para construção da interface e gerenciamento de estado.
+*   **JavaScript (ES6+)**: Lógica do sistema, manipulação de arrays e objetos.
+*   **CSS3 (Vanilla)**: Estilização completa, utilizando variáveis CSS para design system e Media Queries específicas para impressão.
+
+### Funcionalidades do Navegador:
+*   **LocalStorage API**: Utilizada para salvar os dados do currículo no navegador do usuário. Isso garante que as informações não sejam perdidas ao fechar ou atualizar a página.
+*   **Window Print API**: Responsável pela geração do PDF, utilizando as configurações de impressão do sistema operacional.
+
+---
+
+## 3. FUNCIONALIDADES PRINCIPAIS
+
+### 📝 Edição Visual em Tempo Real (WYSIWYG)
+O sistema utiliza o atributo `contentEditable`, permitindo que o usuário clique em qualquer texto do currículo e comece a digitar. A interface reage dinamicamente:
+*   **Feedback Visual**: Campos editáveis recebem um destaque verde suave e bordas tracejadas quando o modo de edição está ativo.
+*   **Auto-save**: Ao perder o foco de um campo (onBlur), as alterações são validadas e salvas instantaneamente no LocalStorage.
+
+### ➕ Gerenciamento Dinâmico de Itens
+Diferente de currículos estáticos, aqui você pode:
+*   **Adicionar/Remover Habilidades**: Botões dinâmicos permitem expandir sua lista de skills.
+*   **Experiências Profissionais**: É possível adicionar novos blocos de experiência completa ou remover antigos.
+*   **Tópicos (Bullets)**: Dentro de cada experiência, você pode adicionar ou remover responsabilidades individualmente.
+
+### 📄 Exportação para PDF (Otimizada para Recrutadores)
+O sistema possui uma folha de estilo de impressão (`@media print`) que:
+*   Remove automaticamente todos os botões e painéis de controle do PDF final.
+*   Ajusta as cores para preto puro (ideal para sistemas de leitura automática de currículos - ATS).
+*   Formata o layout para o padrão internacional A4.
+
+---
+
+## 4. ESTRUTURA DE DADOS
+Os dados são organizados em um objeto JSON central chamado `resumeData`, que contém:
+*   `name`, `role`: Informações básicas.
+*   `contact`: Objeto com e-mail, telefone, localização e links sociais.
+*   `summary`: Texto de resumo profissional.
+*   `skills`: Array de strings para palavras-chave.
+*   `experience`: Array de objetos contendo cargo, empresa, período e lista de conquistas.
+*   `education`: Detalhes acadêmicos.
+*   `languages`: Lista de idiomas.
+
+---
+
+## 5. COMO USAR
+1.  **Acessar**: Navegue até a página de Currículo.
+2.  **Editar**: Clique no botão "📝 Editar Currículo". Os campos editáveis serão destacados.
+3.  **Personalizar**: Clique nos textos para alterar, nos botões `+` para adicionar itens ou `×` para remover.
+4.  **Finalizar**: Clique em "💎 Visualizar" para conferir o resultado sem os destaques de edição.
+5.  **Gerar PDF**: Clique em "Salvar PDF" e escolha a opção "Salvar como PDF" na tela de impressão que abrirá.
+
+---
+Desenvolvido como parte do ecossistema Job Tracker.

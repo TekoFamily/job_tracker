@@ -1,33 +1,31 @@
 
 import React, { useState, useEffect } from 'react';
 import './Resume.css';
-import { adaptResumeWithAI } from '../../services/aiService';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const Resume = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdapting, setIsAdapting] = useState(false);
-  const [jobDescription, setJobDescription] = useState('');
-  const [showJobInput, setShowJobInput] = useState(false);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   // Initial data (could be loaded from localStorage)
   const [resumeData, setResumeData] = useState({
     name: "José Vinícius",
@@ -79,6 +77,7 @@ const Resume = () => {
         ],
       }
     ],
+
     education: [
       {
         course: "Technology Degree (In Progress)",
@@ -95,8 +94,13 @@ const Resume = () => {
       "Portuguese – Native",
       "English – Technical / Intermediate"
     ],
-  }
-);
+  });
+
+
+
+
+
+
 
 
 
@@ -158,25 +162,6 @@ const Resume = () => {
     saveToLocalStorage(newData);
   };
 
-  const handleAdapt = async () => {
-    if (!jobDescription.trim()) return;
-
-    setIsAdapting(true);
-    try {
-      const adaptedData = await adaptResumeWithAI(jobDescription, resumeData);
-      setResumeData(adaptedData);
-      saveToLocalStorage(adaptedData);
-      setShowJobInput(false);
-      setJobDescription('');
-      alert("Currículo adaptado com sucesso! (Simulação)");
-    } catch (error) {
-      console.error("Erro ao adaptar:", error);
-      alert("Houve um erro ao adaptar o currículo.");
-    } finally {
-      setIsAdapting(false);
-    }
-  };
-
   const handleBack = () => window.history.back();
   const handlePrint = () => window.print();
 
@@ -191,13 +176,6 @@ const Resume = () => {
 
         <div className="right-actions">
           <button
-            onClick={() => setShowJobInput(!showJobInput)}
-            className={`btn-ai ${showJobInput ? 'active' : ''}`}
-          >
-            Adaptação por Vaga
-          </button>
-
-          <button
             onClick={() => setIsEditing(!isEditing)}
             className={`btn-edit ${isEditing ? 'active' : ''}`}
           >
@@ -209,29 +187,6 @@ const Resume = () => {
           </button>
         </div>
       </div>
-
-      {showJobInput && (
-        <div className="job-input-panel no-print">
-          <h3>Cole a descrição da vaga</h3>
-          <p>A IA irá adaptar seu resumo, habilidades e experiências para esta vaga específica.</p>
-          <textarea
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Copie e cole aqui a descrição da vaga (LinkedIn, Gupy, etc.)"
-            rows={10}
-          />
-          <div className="panel-actions">
-            <button onClick={() => setShowJobInput(false)} className="btn-cancel">Cancelar</button>
-            <button
-              onClick={handleAdapt}
-              className="btn-submit-ai"
-              disabled={isAdapting || !jobDescription.trim()}
-            >
-              {isAdapting ? 'Processando...' : 'Adaptar Currículo Agora'}
-            </button>
-          </div>
-        </div>
-      )}
 
       <div className={`resume-paper ${isEditing ? 'editing-mode' : ''}`}>
         {/* HEADER */}

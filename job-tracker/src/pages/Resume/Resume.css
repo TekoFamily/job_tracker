@@ -159,7 +159,6 @@
 
 .btn-primary,
 .btn-secondary,
-.btn-ai,
 .btn-edit {
     padding: 10px 20px;
     border-radius: 6px;
@@ -189,23 +188,6 @@
     background-color: #e5e7eb;
 }
 
-.btn-ai {
-    background-color: #8b5cf6;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-ai:hover {
-    background-color: #7c3aed;
-}
-
-.btn-ai.active {
-    background-color: #6d28d9;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .btn-edit {
     background-color: #10b981;
     color: white;
@@ -217,74 +199,6 @@
 
 .btn-edit.active {
     background-color: #047857;
-}
-
-/* JOB INPUT PANEL */
-.job-input-panel {
-    max-width: 210mm;
-    margin: 0 auto 20px auto;
-    background: white;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 1px solid #e5e7eb;
-}
-
-.job-input-panel h3 {
-    margin: 0 0 8px 0;
-    color: #111827;
-}
-
-.job-input-panel p {
-    margin: 0 0 16px 0;
-    color: #4b5563;
-    font-size: 14px;
-}
-
-.job-input-panel textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    margin-bottom: 16px;
-    resize: vertical;
-    outline: none;
-}
-
-.job-input-panel textarea:focus {
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 2px #ddd6fe;
-}
-
-.panel-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-}
-
-.btn-cancel {
-    padding: 8px 16px;
-    border-radius: 6px;
-    background: #f9fafb;
-    border: 1px solid #d1d5db;
-    cursor: pointer;
-}
-
-.btn-submit-ai {
-    padding: 8px 16px;
-    border-radius: 6px;
-    background: #8b5cf6;
-    color: white;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.btn-submit-ai:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 /* EDITING MODE HIGHLIGHTS */
