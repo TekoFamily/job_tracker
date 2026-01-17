@@ -1,113 +1,102 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Resume.css';
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { adaptResumeWithAI } from '../../services/aiService';
 
 const Resume = () => {
-  const resumeData = {
-    name: "Eliane Maia Bispo",
-    role: "Administrativo – Saúde e Educação",
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAdapting, setIsAdapting] = useState(false);
+  const [jobDescription, setJobDescription] = useState('');
+  const [showJobInput, setShowJobInput] = useState(false);
 
-    contact: {
-      email: "elianemaiabispo@gmail.com",
-      phone: "(81) 99542-5342",
-      location: "Recife – PE, Brasil",
-      address: "Rua Genvásio Fioravante, 92 – Bairro Graças",
-      linkedin: "",
-      github: "",
-      maritalStatus: "Casada"
-    },
 
-    summary: `
-Sou uma pessoa responsável e dedicada, com experiência na área administrativa, especialmente nos setores de educação e apoio social. Trabalhei em escola estadual, associação cultural e com consultoria na área de restaurante, atuando com organização de documentos, controle de almoxarifado, atendimento ao público e apoio às rotinas administrativas.
 
-Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da saúde e educação, onde possa contribuir com organização, compromisso e responsabilidade. Atualmente estou finalizando o curso de Serviço Social e curso Nutrição, com interesse em crescer profissionalmente e aprender continuamente.
-    `,
 
-    skills: [
-      "Organização de documentos",
-      "Atendimento ao público e telefônico",
-      "Controle de agenda e compromissos",
-      "Apoio em rotinas administrativas",
-      "Arquivo físico e digital",
-      "Almoxarifado e controle de materiais",
-      "Digitação e elaboração de textos simples",
-      "Uso básico de computador",
-      "Microsoft Word (básico)",
-      "Microsoft Excel (básico)",
-      "E-mail profissional",
-      "Pontualidade e responsabilidade",
-      "Trabalho em equipe"
-    ],
 
-    experience: [
-      {
-        role: "Auxiliar Administrativa / Almoxarifado",
-        company: "E.E.E. Augusto dos Anjos – Escola Estadual de Ensino Fundamental",
-        location: "Campina Grande – Paraíba",
-        period: "2 anos",
-        bullets: [
-          "Controle e organização de materiais e estoque no almoxarifado escolar",
-          "Apoio direto às rotinas administrativas da escola",
-          "Organização de documentos e arquivos",
-          "Atendimento interno e suporte aos processos da unidade de ensino"
-        ],
-      },
-      {
-        role: "Auxiliar Administrativa",
-        company: "Consultoria de Restaurante – Seu Pêo",
-        period: "1 ano",
-        bullets: [
-          "Apoio na organização administrativa",
-          "Controle de materiais e insumos",
-          "Auxílio na rotina operacional",
-          "Organização de processos internos"
-        ],
-      },
-      {
-        role: "Auxiliar Administrativa",
-        company: "Associação Cultural Madre Agatha",
-        period: "6 meses",
-        bullets: [
-          "Atendimento ao público",
-          "Suporte administrativo às atividades culturais",
-          "Organização de documentos",
-          "Auxílio na rotina interna da associação"
-        ],
-      }
-    ],
 
-    education: [
-      {
-        course: "Serviço Social",
-        institution: "Faculdade Metropolitana de Franca",
-        status: "Cursando – fase final do curso"
-      },
-      {
-        course: "Nutrição",
-        institution: "Unigrande Recife",
-        status: "Cursando – 1º período"
-      }
-    ],
 
-    languages: [
-      "Português – Nativo"
-    ],
-  };
+
+
+
+
+
+
+
+
+
+
+
 
   
+  // Initial data (could be loaded from localStorage)
+  const [resumeData, setResumeData] = useState({
+    name: "José Vinícius",
+    role: "Python Developer | Backend & Database Engineer",
+    contact: {
+      email: "seuemail@email.com",
+      phone: "+55 81 99542-5342",
+      location: "Brazil (Remote)",
+      linkedin: "linkedin.com/in/josevinicius",
+      github: "github.com/josevinicius",
+      address: "",
+      maritalStatus: ""
+    },
+    summary: `Python Developer and Junior DBA with hands-on experience in backend development, RESTful APIs, database design, and production data environments. I work daily with Python, SQL, and backend systems, handling real-world data manipulation, migrations, and performance optimization in production and staging databases.\n\nI have experience building APIs with Flask, validating data, handling errors, and working with relational databases such as MySQL, MariaDB, and Oracle. Comfortable working remotely, documenting technical issues, and collaborating asynchronously with technical teams.`,
+    skills: [
+      "Python", "Flask", "RESTful APIs", "Basic GraphQL concepts",
+      "Backend validation and error handling", "SQL (MySQL, MariaDB, Oracle)",
+      "Database schema design", "Database migrations", "Performance tuning",
+      "Production & staging environments", "API testing (Postman / Insomnia)",
+      "Git & GitHub", "Linux / Terminal", "Technical documentation",
+      "Remote collaboration (Slack)"
+    ],
+    experience: [
+      {
+        role: "Junior DBA / Backend Developer",
+        company: "Current Company",
+        location: "Brazil (Remote/Hybrid)",
+        period: "2024 – Present",
+        bullets: [
+          "Development and maintenance of backend APIs using Python and Flask",
+          "Handling data manipulation in production and staging databases",
+          "Writing and optimizing SQL queries for business-critical systems",
+          "Managing database schema changes and migrations safely",
+          "Implementing backend validation and error handling",
+          "Supporting internal systems and automations using Python scripts",
+          "Documenting incidents, bugs, and database changes"
+        ],
+      },
+      {
+        role: "Backend Developer (Projects & Automations)",
+        company: "Personal & Freelance Projects",
+        period: "2023 – Present",
+        bullets: [
+          "Built REST APIs for CRUD operations and integrations",
+          "Developed automation scripts using Python and APIs",
+          "Worked with authentication, data validation, and error handling",
+          "Integrated backend systems with external services",
+          "Version control using Git and GitHub"
+        ],
+      }
+    ],
+    education: [
+      {
+        course: "Technology Degree (In Progress)",
+        institution: "College",
+        status: "In progress"
+      },
+      {
+        course: "Python, Backend & Databases",
+        institution: "Online Courses (Udemy)",
+        status: "Completed / Ongoing"
+      }
+    ],
+    languages: [
+      "Portuguese – Native",
+      "English – Technical / Intermediate"
+    ],
+  }
+);
 
 
 
@@ -129,11 +118,64 @@ Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da 
 
 
 
+  // Persist changes to localStorage
+  useEffect(() => {
+    const savedData = localStorage.getItem('resumeData');
+    if (savedData) {
+      setResumeData(JSON.parse(savedData));
+    }
+  }, []);
 
+  const saveToLocalStorage = (data) => {
+    localStorage.setItem('resumeData', JSON.stringify(data));
+  };
 
+  const handleUpdateField = (path, value) => {
+    const newData = { ...resumeData };
+    const keys = path.split('.');
+    let current = newData;
 
+    for (let i = 0; i < keys.length - 1; i++) {
+      current = current[keys[i]];
+    }
+    current[keys[keys.length - 1]] = value;
 
+    setResumeData(newData);
+    saveToLocalStorage(newData);
+  };
 
+  const handleUpdateArrayItem = (path, index, value) => {
+    const newData = { ...resumeData };
+    const keys = path.split('.');
+    let current = newData;
+
+    for (let i = 0; i < keys.length; i++) {
+      current = current[keys[i]];
+    }
+    current[index] = value;
+
+    setResumeData(newData);
+    saveToLocalStorage(newData);
+  };
+
+  const handleAdapt = async () => {
+    if (!jobDescription.trim()) return;
+
+    setIsAdapting(true);
+    try {
+      const adaptedData = await adaptResumeWithAI(jobDescription, resumeData);
+      setResumeData(adaptedData);
+      saveToLocalStorage(adaptedData);
+      setShowJobInput(false);
+      setJobDescription('');
+      alert("Currículo adaptado com sucesso! (Simulação)");
+    } catch (error) {
+      console.error("Erro ao adaptar:", error);
+      alert("Houve um erro ao adaptar o currículo.");
+    } finally {
+      setIsAdapting(false);
+    }
+  };
 
   const handleBack = () => window.history.back();
   const handlePrint = () => window.print();
@@ -141,31 +183,112 @@ Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da 
   return (
     <div className="resume-container">
       <div className="actions-bar no-print">
-        <button onClick={handleBack} className="btn">
-          Back
-        </button>
-        <button onClick={handlePrint} className="btn">
-          Save/Print PDF
-        </button>
+        <div className="left-actions">
+          <button onClick={handleBack} className="btn-secondary">
+            Voltar
+          </button>
+        </div>
+
+        <div className="right-actions">
+          <button
+            onClick={() => setShowJobInput(!showJobInput)}
+            className={`btn-ai ${showJobInput ? 'active' : ''}`}
+          >
+            Adaptação por Vaga
+          </button>
+
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className={`btn-edit ${isEditing ? 'active' : ''}`}
+          >
+            {isEditing ? '💎 Visualizar' : '📝 Editar Currículo'}
+          </button>
+
+          <button onClick={handlePrint} className="btn-primary">
+            Salvar PDF
+          </button>
+        </div>
       </div>
 
-      <div className="resume-paper">
-        {/* HEADER - CENTERED */}
+      {showJobInput && (
+        <div className="job-input-panel no-print">
+          <h3>Cole a descrição da vaga</h3>
+          <p>A IA irá adaptar seu resumo, habilidades e experiências para esta vaga específica.</p>
+          <textarea
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+            placeholder="Copie e cole aqui a descrição da vaga (LinkedIn, Gupy, etc.)"
+            rows={10}
+          />
+          <div className="panel-actions">
+            <button onClick={() => setShowJobInput(false)} className="btn-cancel">Cancelar</button>
+            <button
+              onClick={handleAdapt}
+              className="btn-submit-ai"
+              disabled={isAdapting || !jobDescription.trim()}
+            >
+              {isAdapting ? 'Processando...' : 'Adaptar Currículo Agora'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className={`resume-paper ${isEditing ? 'editing-mode' : ''}`}>
+        {/* HEADER */}
         <header className="resume-header">
-          <h1 className="resume-name">{resumeData.name}</h1>
-          <div className="resume-role">{resumeData.role}</div>
+          <h1
+            contentEditable={isEditing}
+            onBlur={(e) => handleUpdateField('name', e.target.innerText)}
+            suppressContentEditableWarning={true}
+            className="resume-name"
+          >
+            {resumeData.name}
+          </h1>
+          <div
+            contentEditable={isEditing}
+            onBlur={(e) => handleUpdateField('role', e.target.innerText)}
+            suppressContentEditableWarning={true}
+            className="resume-role"
+          >
+            {resumeData.role}
+          </div>
 
           <div className="resume-contact">
-            {resumeData.contact.email} | {resumeData.contact.phone} | {resumeData.contact.location}<br />
-            {resumeData.contact.address}<br />
+            <span
+              contentEditable={isEditing}
+              onBlur={(e) => handleUpdateField('contact.email', e.target.innerText)}
+              suppressContentEditableWarning={true}
+            >{resumeData.contact.email}</span>
+            {" | "}
+            <span
+              contentEditable={isEditing}
+              onBlur={(e) => handleUpdateField('contact.phone', e.target.innerText)}
+              suppressContentEditableWarning={true}
+            >{resumeData.contact.phone}</span>
+            {" | "}
+            <span
+              contentEditable={isEditing}
+              onBlur={(e) => handleUpdateField('contact.location', e.target.innerText)}
+              suppressContentEditableWarning={true}
+            >{resumeData.contact.location}</span>
+            <br />
             {resumeData.contact.linkedin && (
-              <span>LinkedIn: {resumeData.contact.linkedin} | </span>
+              <span>
+                LinkedIn: <span
+                  contentEditable={isEditing}
+                  onBlur={(e) => handleUpdateField('contact.linkedin', e.target.innerText)}
+                  suppressContentEditableWarning={true}
+                >{resumeData.contact.linkedin}</span> |
+              </span>
             )}
             {resumeData.contact.github && (
-              <span>GitHub: {resumeData.contact.github} | </span>
-            )}
-            {resumeData.contact.maritalStatus && (
-              <span>{resumeData.contact.maritalStatus}</span>
+              <span>
+                GitHub: <span
+                  contentEditable={isEditing}
+                  onBlur={(e) => handleUpdateField('contact.github', e.target.innerText)}
+                  suppressContentEditableWarning={true}
+                >{resumeData.contact.github}</span>
+              </span>
             )}
           </div>
         </header>
@@ -173,18 +296,55 @@ Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da 
         {/* SUMMARY */}
         <section className="resume-section">
           <div className="section-title">Professional Summary</div>
-          <div className="section-content">
+          <div
+            className="section-content editable-area"
+            contentEditable={isEditing}
+            onBlur={(e) => handleUpdateField('summary', e.target.innerText)}
+            suppressContentEditableWarning={true}
+          >
             {resumeData.summary}
           </div>
         </section>
 
-        {/* SKILLS - TWO COLUMNS */}
+        {/* SKILLS */}
         <section className="resume-section">
           <div className="section-title">Skills & Keywords</div>
           <ul className="skills-grid">
             {resumeData.skills.map((skill, i) => (
-              <li key={i}>{skill}</li>
+              <li key={i} className="skill-item">
+                <span
+                  contentEditable={isEditing}
+                  onBlur={(e) => handleUpdateArrayItem('skills', i, e.target.innerText)}
+                  suppressContentEditableWarning={true}
+                >
+                  {skill}
+                </span>
+                {isEditing && (
+                  <button
+                    className="btn-delete-small no-print"
+                    onClick={() => {
+                      const newSkills = resumeData.skills.filter((_, index) => index !== i);
+                      setResumeData({ ...resumeData, skills: newSkills });
+                      saveToLocalStorage({ ...resumeData, skills: newSkills });
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
+              </li>
             ))}
+            {isEditing && (
+              <button
+                className="btn-add-small no-print"
+                onClick={() => {
+                  const newSkills = [...resumeData.skills, "Nova Habilidade"];
+                  setResumeData({ ...resumeData, skills: newSkills });
+                  saveToLocalStorage({ ...resumeData, skills: newSkills });
+                }}
+              >
+                + Adicionar Habilidade
+              </button>
+            )}
           </ul>
         </section>
 
@@ -195,16 +355,119 @@ Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da 
           {resumeData.experience.map((job, i) => (
             <div key={i} className="job-entry">
               <div className="job-header">
-                <span>{job.role}</span>
-                <span className="job-period">{job.period}</span>
+                <div>
+                  <span
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newExp = [...resumeData.experience];
+                      newExp[i].role = e.target.innerText;
+                      setResumeData({ ...resumeData, experience: newExp });
+                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{job.role}</span>
+                  {" - "}
+                  <span
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newExp = [...resumeData.experience];
+                      newExp[i].company = e.target.innerText;
+                      setResumeData({ ...resumeData, experience: newExp });
+                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{job.company}</span>
+                </div>
+                <div className="job-period-container">
+                  <span
+                    className="job-period"
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newExp = [...resumeData.experience];
+                      newExp[i].period = e.target.innerText;
+                      setResumeData({ ...resumeData, experience: newExp });
+                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{job.period}</span>
+                  {isEditing && (
+                    <button
+                      className="btn-delete-small no-print"
+                      onClick={() => {
+                        const newExp = resumeData.experience.filter((_, index) => index !== i);
+                        setResumeData({ ...resumeData, experience: newExp });
+                        saveToLocalStorage({ ...resumeData, experience: newExp });
+                      }}
+                    >
+                      Remover Experiência
+                    </button>
+                  )}
+                </div>
               </div>
               <ul className="job-bullets">
                 {job.bullets.map((item, j) => (
-                  <li key={j}>{item}</li>
+                  <li key={j} className="bullet-item">
+                    <span
+                      contentEditable={isEditing}
+                      onBlur={(e) => {
+                        const newExp = [...resumeData.experience];
+                        newExp[i].bullets[j] = e.target.innerText;
+                        setResumeData({ ...resumeData, experience: newExp });
+                        saveToLocalStorage({ ...resumeData, experience: newExp });
+                      }}
+                      suppressContentEditableWarning={true}
+                    >
+                      {item}
+                    </span>
+                    {isEditing && (
+                      <button
+                        className="btn-delete-small no-print"
+                        onClick={() => {
+                          const newExp = [...resumeData.experience];
+                          newExp[i].bullets = newExp[i].bullets.filter((_, index) => index !== j);
+                          setResumeData({ ...resumeData, experience: newExp });
+                          saveToLocalStorage({ ...resumeData, experience: newExp });
+                        }}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </li>
                 ))}
+                {isEditing && (
+                  <button
+                    className="btn-add-small no-print"
+                    onClick={() => {
+                      const newExp = [...resumeData.experience];
+                      newExp[i].bullets = [...newExp[i].bullets, "Nova responsabilidade/conquista"];
+                      setResumeData({ ...resumeData, experience: newExp });
+                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                    }}
+                  >
+                    + Adicionar Bullet
+                  </button>
+                )}
               </ul>
             </div>
           ))}
+          {isEditing && (
+            <button
+              className="btn-add-experience no-print"
+              onClick={() => {
+                const newJob = {
+                  role: "Cargo",
+                  company: "Empresa",
+                  period: "20XX - 20XX",
+                  bullets: ["Nova atividade"]
+                };
+                const newExp = [...resumeData.experience, newJob];
+                setResumeData({ ...resumeData, experience: newExp });
+                saveToLocalStorage({ ...resumeData, experience: newExp });
+              }}
+            >
+              + Adicionar Nova Experiência
+            </button>
+          )}
         </section>
 
         {/* EDUCATION */}
@@ -213,9 +476,36 @@ Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da 
           <div className="section-content">
             {resumeData.education.map((edu, i) => (
               <div key={i} style={{ marginBottom: 6 }}>
-                <strong>{edu.course}</strong><br />
-                {edu.institution}<br />
-                <em>{edu.status}</em>
+                <strong
+                  contentEditable={isEditing}
+                  onBlur={(e) => {
+                    const newEdu = [...resumeData.education];
+                    newEdu[i].course = e.target.innerText;
+                    setResumeData({ ...resumeData, education: newEdu });
+                    saveToLocalStorage({ ...resumeData, education: newEdu });
+                  }}
+                  suppressContentEditableWarning={true}
+                >{edu.course}</strong><br />
+                <span
+                  contentEditable={isEditing}
+                  onBlur={(e) => {
+                    const newEdu = [...resumeData.education];
+                    newEdu[i].institution = e.target.innerText;
+                    setResumeData({ ...resumeData, education: newEdu });
+                    saveToLocalStorage({ ...resumeData, education: newEdu });
+                  }}
+                  suppressContentEditableWarning={true}
+                >{edu.institution}</span><br />
+                <em
+                  contentEditable={isEditing}
+                  onBlur={(e) => {
+                    const newEdu = [...resumeData.education];
+                    newEdu[i].status = e.target.innerText;
+                    setResumeData({ ...resumeData, education: newEdu });
+                    saveToLocalStorage({ ...resumeData, education: newEdu });
+                  }}
+                  suppressContentEditableWarning={true}
+                >{edu.status}</em>
               </div>
             ))}
           </div>
@@ -225,7 +515,21 @@ Busco uma oportunidade no setor administrativo, preferencialmente nas áreas da 
         <section className="resume-section">
           <div className="section-title">Languages</div>
           <div className="section-content">
-            {resumeData.languages.join(" • ")}
+            {resumeData.languages.map((lang, i) => (
+              <span key={i}>
+                <span
+                  contentEditable={isEditing}
+                  onBlur={(e) => {
+                    const newLangs = [...resumeData.languages];
+                    newLangs[i] = e.target.innerText;
+                    setResumeData({ ...resumeData, languages: newLangs });
+                    saveToLocalStorage({ ...resumeData, languages: newLangs });
+                  }}
+                  suppressContentEditableWarning={true}
+                >{lang}</span>
+                {i < resumeData.languages.length - 1 && " • "}
+              </span>
+            ))}
           </div>
         </section>
       </div>
