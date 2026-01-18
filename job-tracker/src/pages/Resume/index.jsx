@@ -4,6 +4,7 @@ import './Resume.css';
 import ResumeHistoryModal from '../../components/ResumeHistory/ResumeHistoryModal';
 
 const INITIAL_RESUME_DATA = {
+  lang: "pt", // pt or en
   name: "José Vinícius Lourenço",
   role: "Backend Engineer | Junior DBA (Oracle & SQL)",
   contact: {
@@ -134,6 +135,31 @@ Comfortable working remotely, collaborating asynchronously, and handling sensiti
   ]
 };
 
+const LABELS = {
+  pt: {
+    summary: "Resumo Profissional",
+    skills: "Habilidades & Competências",
+    experience: "Experiência Profissional",
+    projects: "Projetos & Destaques",
+    education: "Educação",
+    languages: "Idiomas",
+    technologies: "Tecnologias",
+    toggleLang: "Switch to English",
+    langIcon: "🇺🇸"
+  },
+  en: {
+    summary: "Professional Summary",
+    skills: "Skills & Competencies",
+    experience: "Professional Experience",
+    projects: "Projects & Highlights",
+    education: "Education",
+    languages: "Languages",
+    technologies: "Technologies",
+    toggleLang: "Mudar para Português",
+    langIcon: "🇧🇷"
+  }
+};
+
 // Gera ID único
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
@@ -143,6 +169,19 @@ const Resume = () => {
   const [activeResumeId, setActiveResumeId] = useState(null);
   const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Helper to safely get label
+  const t = (key) => {
+    const lang = resumeData.lang || 'pt';
+    return LABELS[lang][key] || LABELS['pt'][key];
+  };
+
+  // Toggle Language
+  const handleToggleLanguage = () => {
+    const currentLang = resumeData.lang || 'pt';
+    const newLang = currentLang === 'pt' ? 'en' : 'pt';
+    handleUpdateField('lang', newLang);
+  };
 
   // Load Resumes & Migration
   useEffect(() => {
@@ -169,7 +208,7 @@ const Resume = () => {
         id: generateId(),
         title: "Meu Currículo Principal",
         lastModified: new Date().toISOString(),
-        data: JSON.parse(legacyData)
+        data: { ...JSON.parse(legacyData), lang: 'pt' }
       };
       setResumes([legacyResume]);
       setActiveResumeId(legacyResume.id);
@@ -342,6 +381,15 @@ const Resume = () => {
         </div>
 
         <div className="right-actions">
+          {/* LANGUAGE TOGGLE */}
+          <button
+            className="btn-secondary"
+            onClick={handleToggleLanguage}
+            title={t('toggleLang')}
+          >
+            {t('langIcon')} {resumeData.lang === 'pt' ? 'PT' : 'EN'}
+          </button>
+
           {isEditing && (
             <button onClick={handleReset} className="btn-secondary" style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}>
               Resetar Padrão
@@ -439,7 +487,7 @@ const Resume = () => {
 
         {/* SUMMARY */}
         <section className="resume-section">
-          <div className="section-title">Resumo Profissional</div>
+          <div className="section-title">{t('summary')}</div>
           <div
             className="section-content editable-area"
             contentEditable={isEditing}
@@ -453,7 +501,7 @@ const Resume = () => {
 
         {/* SKILLS */}
         <section className="resume-section">
-          <div className="section-title">Habilidades & Competências</div>
+          <div className="section-title">{t('skills')}</div>
           <ul className="skills-grid">
             {resumeData.skills.map((skill, i) => (
               <li key={i} className="skill-item">
@@ -493,7 +541,7 @@ const Resume = () => {
 
         {/* EXPERIENCE */}
         <section className="resume-section">
-          <div className="section-title">Experiência Profissional</div>
+          <div className="section-title">{t('experience')}</div>
 
           {resumeData.experience.map((job, i) => (
             <div key={i} className="job-entry">
@@ -609,7 +657,7 @@ const Resume = () => {
         {/* PROJECTS */}
         {resumeData.projects && resumeData.projects.length > 0 && (
           <section className="resume-section">
-            <div className="section-title">Projetos & Destaques</div>
+            <div className="section-title">{t('projects')}</div>
             {resumeData.projects.map((project, i) => (
               <div key={i} className="job-entry" style={{ marginBottom: 10 }}>
                 <div className="job-header">
@@ -648,7 +696,7 @@ const Resume = () => {
                   {project.description}
                 </div>
                 <div style={{ fontSize: '9pt', fontStyle: 'italic', marginTop: 2 }}>
-                  Tecnologias: {project.technologies.join(', ')}
+                  {t('technologies')}: {project.technologies.join(', ')}
                 </div>
               </div>
             ))}
@@ -673,7 +721,7 @@ const Resume = () => {
 
         {/* EDUCATION */}
         <section className="resume-section">
-          <div className="section-title">Educação</div>
+          <div className="section-title">{t('education')}</div>
           <div className="section-content">
             {resumeData.education.map((edu, i) => (
               <div key={i} style={{ marginBottom: 6 }}>
@@ -711,7 +759,7 @@ const Resume = () => {
 
         {/* LANGUAGES */}
         <section className="resume-section">
-          <div className="section-title">Idiomas</div>
+          <div className="section-title">{t('languages')}</div>
           <div className="section-content">
             {resumeData.languages.map((lang, i) => (
               <span key={i}>
