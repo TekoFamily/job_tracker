@@ -163,7 +163,8 @@
 
 .btn-primary,
 .btn-secondary,
-.btn-edit {
+.btn-edit,
+.btn-history {
     padding: 10px 20px;
     border-radius: 6px;
     font-weight: 600;
@@ -203,6 +204,15 @@
 
 .btn-edit.active {
     background-color: #047857;
+}
+
+.btn-history {
+    background-color: #8b5cf6;
+    color: white;
+}
+
+.btn-history:hover {
+    background-color: #7c3aed;
 }
 
 /* EDITING MODE HIGHLIGHTS */

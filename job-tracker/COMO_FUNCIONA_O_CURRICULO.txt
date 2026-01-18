@@ -1,76 +1,82 @@
 
-# SISTEMA DE CURRÍCULO DINÂMICO - DOCUMENTAÇÃO
+# SISTEMA DE CURRÍCULO DINÂMICO - DOCUMENTAÇÃO (V2.0)
 
 Este documento descreve o funcionamento, as tecnologias e as funcionalidades do sistema de currículo dinâmico desenvolvido para o Job Tracker.
 
 ## 1. OBJETIVO DO SISTEMA
-O sistema foi criado para permitir que o usuário gerencie seu currículo de forma visual e intuitiva, eliminando a necessidade de editar código fonte para atualizar informações. Ele foca em agilidade, persistência de dados local e exportação profissional (ATS-friendly).
+O sistema foi criado para permitir que o usuário gerencie **múltiplas versões de seu currículo** (Histórico de Currículos) de forma visual e intuitiva. Cada versão é independente, permitindo adaptar perfis para vagas específicas (ex: Backend Python vs. Oracle DBA).
 
 ---
 
 ## 2. TECNOLOGIAS UTILIZADAS
 
 ### Frontend Core:
-*   **React.js**: Biblioteca principal para construção da interface e gerenciamento de estado.
-*   **JavaScript (ES6+)**: Lógica do sistema, manipulação de arrays e objetos.
-*   **CSS3 (Vanilla)**: Estilização completa, utilizando variáveis CSS para design system e Media Queries específicas para impressão.
+*   **React.js**: Biblioteca principal.
+*   **JavaScript (ES6+)**: Lógica do sistema.
+*   **CSS3 (Vanilla)**: Estilização completa.
 
 ### Funcionalidades do Navegador:
-*   **LocalStorage API**: Utilizada para salvar os dados do currículo no navegador do usuário. Isso garante que as informações não sejam perdidas ao fechar ou atualizar a página.
-*   **Window Print API**: Responsável pela geração do PDF, utilizando as configurações de impressão do sistema operacional.
+*   **LocalStorage API**: Persistência de dados. Agora utiliza a chave `jobTracker_resumes` para armazenar o array de todos os currículos e `jobTracker_activeResumeId` para lembrar qual estava aberto.
+*   **Window Print API**: Geração de PDF.
 
 ---
 
 ## 3. FUNCIONALIDADES PRINCIPAIS
 
+### � Histórico de Currículos (Novo)
+Agora é possível manter vários currículos.
+*   **Criar Novo**: Inicia um currículo com dados base.
+*   **Duplicar**: Cria uma cópia exata de um currículo existente (ideal para fazer pequenas adaptações para uma vaga específica).
+*   **Alternar**: Troca instantaneamente o currículo exibido na tela.
+*   **Excluir**: Remove versões obsoletas.
+
 ### 📝 Edição Visual em Tempo Real (WYSIWYG)
-O sistema utiliza o atributo `contentEditable`, permitindo que o usuário clique em qualquer texto do currículo e comece a digitar. A interface reage dinamicamente:
-*   **Feedback Visual**: Campos editáveis recebem um destaque verde suave e bordas tracejadas quando o modo de edição está ativo.
-*   **Auto-save**: Ao perder o foco de um campo (onBlur), as alterações são validadas e salvas instantaneamente no LocalStorage.
+O sistema mantém a edição intuitiva:
+*   **Clique e Digite**: Textos editáveis diretamente na folha.
+*   **Auto-save**: Alterações são salvas automaticamente no perfil *ativo* ao sair do campo (onBlur).
 
 ### ➕ Gerenciamento Dinâmico de Itens
-Diferente de currículos estáticos, aqui você pode:
-*   **Adicionar/Remover Habilidades**: Botões dinâmicos permitem expandir sua lista de skills.
-*   **Experiências Profissionais**: É possível adicionar novos blocos de experiência completa ou remover antigos.
-*   **Tópicos (Bullets)**: Dentro de cada experiência, você pode adicionar ou remover responsabilidades individualmente.
+*   Adicionar/Remover Skills, Experiências e Projetos.
+*   Listas reordenáveis (conceitualmente, através de edição).
 
-### 📄 Exportação para PDF (Otimizada para Recrutadores)
-O sistema possui uma folha de estilo de impressão (`@media print`) que:
-*   Remove automaticamente todos os botões e painéis de controle do PDF final.
-*   Ajusta as cores para preto puro (ideal para sistemas de leitura automática de currículos - ATS).
-*   Formata o layout para o padrão internacional A4.
+### 📄 Exportação para PDF (ATS-Friendly)
+*   Layout limpo e estruturado.
+*   Remoção de elementos de UI na impressão.
 
 ---
 
-## 4. ESTRUTURA DE DADOS
-Os dados são organizados em um objeto JSON central chamado `resumeData`, que contém:
-*   `name`, `role`: Informações básicas.
-*   `contact`: Objeto com e-mail, telefone, localização e links sociais.
-*   `summary`: Texto de resumo profissional.
-*   `skills`: Array de strings para palavras-chave.
-*   `experience`: Array de objetos contendo cargo, empresa, período e lista de conquistas.
-*   `education`: Detalhes acadêmicos.
-*   `languages`: Lista de idiomas.
+## 4. ESTRUTURA DE DADOS (V2)
+
+Os dados agora são uma lista de objetos:
+
+```json
+[
+  {
+    "id": "k8l1m2n3...",
+    "title": "Backend Python Sênior",
+    "lastModified": "2024-01-18T10:00:00.000Z",
+    "data": { ...resumeData... }
+  },
+  {
+    "id": "x9y8z7...",
+    "title": "DBA Oracle Pleno",
+    "lastModified": "2024-01-15T14:30:00.000Z",
+    "data": { ...resumeData... }
+  }
+]
+```
+
+O objeto `data` dentro de cada item mantém a estrutura original (`name`, `role`, `experience`, etc).
 
 ---
 
 ## 5. COMO USAR
-1.  **Acessar**: Navegue até a página de Currículo.
-2.  **Editar**: Clique no botão "📝 Editar Currículo". Os campos editáveis serão destacados.
-3.  **Personalizar**: Clique nos textos para alterar, nos botões `+` para adicionar itens ou `×` para remover.
-4.  **Finalizar**: Clique em "💎 Visualizar" para conferir o resultado sem os destaques de edição.
-5.  **Gerar PDF**: Clique em "Salvar PDF" e escolha a opção "Salvar como PDF" na tela de impressão que abrirá.
+
+1.  **Gerenciar Versões**: Clique no botão central "� [Nome do Currículo] (Trocar)" na barra de ações.
+2.  **Criar/Duplicar**: No modal que abrir, escolha Criar Novo ou use o botão "Duplicar" em um item existente.
+3.  **Editar**: Com o currículo desejado selecionado, clique em "📝 Editar Currículo".
+4.  **Salvar PDF**: Clique em "Salvar PDF".
 
 ---
 
-## 6. MÓDULO DE VAGAS RECOMENDADAS (NOVO)
-O sistema evoluiu para incluir inteligência de busca e recomendação de vagas:
-*   **Integração com APIs**: Consumo de vagas reais via Remotive API.
-*   **Normalização (jobData)**: Todos os dados externos são convertidos para um formato padrão antes de processar.
-*   **Motor de Match (Job Matcher)**:
-    *   **Score (0-100)**: Calculado com base em competências técnicas (60%), nível de senioridade (20%) e similaridade de cargo (20%).
-    *   **Análise de Gaps**: O sistema identifica quais habilidades da vaga você já possui e quais são lacunas técnicas.
-*   **Fluxo de Aplicação**: O usuário visualiza o match, analisa a vaga e é redirecionado para o site oficial para realizar a candidatura.
-
----
 Desenvolvido como parte do ecossistema Job Tracker.

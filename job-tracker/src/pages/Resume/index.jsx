@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import './Resume.css';
+import ResumeHistoryModal from '../../components/ResumeHistory/ResumeHistoryModal';
 
 const INITIAL_RESUME_DATA = {
   name: "José Vinícius Lourenço",
@@ -133,30 +134,152 @@ Comfortable working remotely, collaborating asynchronously, and handling sensiti
   ]
 };
 
+// Gera ID único
+const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+
 const Resume = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [resumes, setResumes] = useState([]);
+  const [activeResumeId, setActiveResumeId] = useState(null);
   const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
+  const [showHistory, setShowHistory] = useState(false);
 
-  // Persist changes to localStorage
+  // Load Resumes & Migration
   useEffect(() => {
-    const savedData = localStorage.getItem('resumeData');
-    if (savedData) {
-      setResumeData(JSON.parse(savedData));
+    const savedResumes = localStorage.getItem('jobTracker_resumes');
+    const savedActiveId = localStorage.getItem('jobTracker_activeResumeId');
+    const legacyData = localStorage.getItem('resumeData');
+
+    if (savedResumes) {
+      const parsedResumes = JSON.parse(savedResumes);
+      setResumes(parsedResumes);
+
+      // Determine active resume
+      if (savedActiveId && parsedResumes.find(r => r.id === savedActiveId)) {
+        setActiveResumeId(savedActiveId);
+        setResumeData(parsedResumes.find(r => r.id === savedActiveId).data);
+      } else if (parsedResumes.length > 0) {
+        // Fallback to first
+        setActiveResumeId(parsedResumes[0].id);
+        setResumeData(parsedResumes[0].data);
+      }
+    } else if (legacyData) {
+      // Migration from single Resume
+      const legacyResume = {
+        id: generateId(),
+        title: "Meu Currículo Principal",
+        lastModified: new Date().toISOString(),
+        data: JSON.parse(legacyData)
+      };
+      setResumes([legacyResume]);
+      setActiveResumeId(legacyResume.id);
+      setResumeData(legacyResume.data);
+      localStorage.setItem('jobTracker_resumes', JSON.stringify([legacyResume]));
+      localStorage.setItem('jobTracker_activeResumeId', legacyResume.id);
+    } else {
+      // Fresh Init
+      const initialResume = {
+        id: generateId(),
+        title: "Currículo Padrão",
+        lastModified: new Date().toISOString(),
+        data: INITIAL_RESUME_DATA
+      };
+      setResumes([initialResume]);
+      setActiveResumeId(initialResume.id);
+      setResumeData(initialResume.data);
+      localStorage.setItem('jobTracker_resumes', JSON.stringify([initialResume]));
+      localStorage.setItem('jobTracker_activeResumeId', initialResume.id);
     }
   }, []);
 
-  const saveToLocalStorage = (data) => {
-    localStorage.setItem('resumeData', JSON.stringify(data));
+  // Update logic: Updates current resume in local state + triggers persistent save
+  const updateActiveResume = (newData) => {
+    setResumeData(newData);
+
+    // Update the list
+    const updatedResumes = resumes.map(r =>
+      r.id === activeResumeId
+        ? { ...r, data: newData, lastModified: new Date().toISOString() }
+        : r
+    );
+
+    setResumes(updatedResumes);
+    localStorage.setItem('jobTracker_resumes', JSON.stringify(updatedResumes));
   };
 
-  const handleReset = () => {
-    if (window.confirm("Deseja resetar o currículo para os dados padrão do código? Isso apagará suas edições locais.")) {
-      setResumeData(INITIAL_RESUME_DATA);
-      saveToLocalStorage(INITIAL_RESUME_DATA);
+  // Switch Resume
+  const handleSwitchResume = (id) => {
+    const target = resumes.find(r => r.id === id);
+    if (target) {
+      setActiveResumeId(id);
+      setResumeData(target.data);
+      localStorage.setItem('jobTracker_activeResumeId', id);
+      setShowHistory(false);
       setIsEditing(false);
     }
   };
 
+  // Create New Resume
+  const handleCreateResume = (name, initialData = null) => {
+    const newResume = {
+      id: generateId(),
+      title: name,
+      lastModified: new Date().toISOString(),
+      data: initialData || INITIAL_RESUME_DATA // Clone base template or use provided data
+    };
+
+    const newResumes = [...resumes, newResume];
+    setResumes(newResumes);
+    localStorage.setItem('jobTracker_resumes', JSON.stringify(newResumes));
+
+    // Switch to it
+    handleSwitchResume(newResume.id);
+  };
+
+  // Duplicate Resume
+  const handleDuplicateResume = (id) => {
+    const original = resumes.find(r => r.id === id);
+    if (!original) return;
+
+    const copy = {
+      id: generateId(),
+      title: `${original.title} (Cópia)`,
+      lastModified: new Date().toISOString(),
+      data: JSON.parse(JSON.stringify(original.data)) // Deep copy
+    };
+
+    const newResumes = [...resumes, copy];
+    setResumes(newResumes);
+    localStorage.setItem('jobTracker_resumes', JSON.stringify(newResumes));
+  };
+
+  // Delete Resume
+  const handleDeleteResume = (id) => {
+    if (resumes.length <= 1) {
+      alert("Você precisa ter pelo menos um currículo.");
+      return;
+    }
+
+    if (!window.confirm("Tem certeza que deseja excluir este currículo?")) return;
+
+    const newResumes = resumes.filter(r => r.id !== id);
+    setResumes(newResumes);
+    localStorage.setItem('jobTracker_resumes', JSON.stringify(newResumes));
+
+    // If we deleted the active one, switch to the first one available
+    if (activeResumeId === id) {
+      handleSwitchResume(newResumes[0].id);
+    }
+  };
+
+  const handleReset = () => {
+    if (window.confirm("Deseja resetar o currículo para os dados padrão do código? Isso apagará suas edições locais para este perfil.")) {
+      updateActiveResume(INITIAL_RESUME_DATA);
+      setIsEditing(false);
+    }
+  };
+
+  // Field Updates (Generalized)
   const handleUpdateField = (path, value) => {
     const newData = { ...resumeData };
     const keys = path.split('.');
@@ -167,8 +290,7 @@ const Resume = () => {
     }
     current[keys[keys.length - 1]] = value;
 
-    setResumeData(newData);
-    saveToLocalStorage(newData);
+    updateActiveResume(newData);
   };
 
   const handleUpdateArrayItem = (path, index, value) => {
@@ -181,19 +303,41 @@ const Resume = () => {
     }
     current[index] = value;
 
-    setResumeData(newData);
-    saveToLocalStorage(newData);
+    updateActiveResume(newData);
   };
 
   const handleBack = () => window.history.back();
   const handlePrint = () => window.print();
 
+  // Find active title for display
+  const activeTitle = resumes.find(r => r.id === activeResumeId)?.title || "Meu Currículo";
+
   return (
     <div className="resume-container">
+      <ResumeHistoryModal
+        isOpen={showHistory}
+        onClose={() => setShowHistory(false)}
+        resumes={resumes}
+        activeResumeId={activeResumeId}
+        onSelect={handleSwitchResume}
+        onCreate={handleCreateResume}
+        onDuplicate={handleDuplicateResume}
+        onDelete={handleDeleteResume}
+      />
+
       <div className="actions-bar no-print">
         <div className="left-actions">
           <button onClick={handleBack} className="btn-secondary">
             Voltar
+          </button>
+        </div>
+
+        <div className="center-actions">
+          <button
+            className="btn-history"
+            onClick={() => setShowHistory(true)}
+          >
+            📂 {activeTitle} (Trocar)
           </button>
         </div>
 
@@ -325,8 +469,7 @@ const Resume = () => {
                     className="btn-delete-small no-print"
                     onClick={() => {
                       const newSkills = resumeData.skills.filter((_, index) => index !== i);
-                      setResumeData({ ...resumeData, skills: newSkills });
-                      saveToLocalStorage({ ...resumeData, skills: newSkills });
+                      updateActiveResume({ ...resumeData, skills: newSkills });
                     }}
                   >
                     ×
@@ -339,8 +482,7 @@ const Resume = () => {
                 className="btn-add-small no-print"
                 onClick={() => {
                   const newSkills = [...resumeData.skills, "Nova Habilidade"];
-                  setResumeData({ ...resumeData, skills: newSkills });
-                  saveToLocalStorage({ ...resumeData, skills: newSkills });
+                  updateActiveResume({ ...resumeData, skills: newSkills });
                 }}
               >
                 + Adicionar Habilidade
@@ -362,8 +504,7 @@ const Resume = () => {
                     onBlur={(e) => {
                       const newExp = [...resumeData.experience];
                       newExp[i].role = e.target.innerText;
-                      setResumeData({ ...resumeData, experience: newExp });
-                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                      updateActiveResume({ ...resumeData, experience: newExp });
                     }}
                     suppressContentEditableWarning={true}
                     style={{ fontWeight: 'bold' }}
@@ -374,8 +515,7 @@ const Resume = () => {
                     onBlur={(e) => {
                       const newExp = [...resumeData.experience];
                       newExp[i].company = e.target.innerText;
-                      setResumeData({ ...resumeData, experience: newExp });
-                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                      updateActiveResume({ ...resumeData, experience: newExp });
                     }}
                     suppressContentEditableWarning={true}
                   >{job.company}</span>
@@ -387,8 +527,7 @@ const Resume = () => {
                     onBlur={(e) => {
                       const newExp = [...resumeData.experience];
                       newExp[i].period = e.target.innerText;
-                      setResumeData({ ...resumeData, experience: newExp });
-                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                      updateActiveResume({ ...resumeData, experience: newExp });
                     }}
                     suppressContentEditableWarning={true}
                   >{job.period}</span>
@@ -397,8 +536,7 @@ const Resume = () => {
                       className="btn-delete-small no-print"
                       onClick={() => {
                         const newExp = resumeData.experience.filter((_, index) => index !== i);
-                        setResumeData({ ...resumeData, experience: newExp });
-                        saveToLocalStorage({ ...resumeData, experience: newExp });
+                        updateActiveResume({ ...resumeData, experience: newExp });
                       }}
                     >
                       ×
@@ -414,8 +552,7 @@ const Resume = () => {
                       onBlur={(e) => {
                         const newExp = [...resumeData.experience];
                         newExp[i].bullets[j] = e.target.innerText;
-                        setResumeData({ ...resumeData, experience: newExp });
-                        saveToLocalStorage({ ...resumeData, experience: newExp });
+                        updateActiveResume({ ...resumeData, experience: newExp });
                       }}
                       suppressContentEditableWarning={true}
                     >
@@ -427,8 +564,7 @@ const Resume = () => {
                         onClick={() => {
                           const newExp = [...resumeData.experience];
                           newExp[i].bullets = newExp[i].bullets.filter((_, index) => index !== j);
-                          setResumeData({ ...resumeData, experience: newExp });
-                          saveToLocalStorage({ ...resumeData, experience: newExp });
+                          updateActiveResume({ ...resumeData, experience: newExp });
                         }}
                       >
                         ×
@@ -442,8 +578,7 @@ const Resume = () => {
                     onClick={() => {
                       const newExp = [...resumeData.experience];
                       newExp[i].bullets = [...newExp[i].bullets, "Nova responsabilidade/conquista"];
-                      setResumeData({ ...resumeData, experience: newExp });
-                      saveToLocalStorage({ ...resumeData, experience: newExp });
+                      updateActiveResume({ ...resumeData, experience: newExp });
                     }}
                   >
                     + Adicionar Bullet
@@ -463,8 +598,7 @@ const Resume = () => {
                   bullets: ["Nova atividade"]
                 };
                 const newExp = [...resumeData.experience, newJob];
-                setResumeData({ ...resumeData, experience: newExp });
-                saveToLocalStorage({ ...resumeData, experience: newExp });
+                updateActiveResume({ ...resumeData, experience: newExp });
               }}
             >
               + Adicionar Nova Experiência
@@ -484,8 +618,7 @@ const Resume = () => {
                     onBlur={(e) => {
                       const newProjects = [...resumeData.projects];
                       newProjects[i].name = e.target.innerText;
-                      setResumeData({ ...resumeData, projects: newProjects });
-                      saveToLocalStorage({ ...resumeData, projects: newProjects });
+                      updateActiveResume({ ...resumeData, projects: newProjects });
                     }}
                     suppressContentEditableWarning={true}
                     style={{ fontWeight: 'bold' }}
@@ -495,8 +628,7 @@ const Resume = () => {
                       className="btn-delete-small no-print"
                       onClick={() => {
                         const newProjects = resumeData.projects.filter((_, index) => index !== i);
-                        setResumeData({ ...resumeData, projects: newProjects });
-                        saveToLocalStorage({ ...resumeData, projects: newProjects });
+                        updateActiveResume({ ...resumeData, projects: newProjects });
                       }}
                     >
                       ×
@@ -508,8 +640,7 @@ const Resume = () => {
                   onBlur={(e) => {
                     const newProjects = [...resumeData.projects];
                     newProjects[i].description = e.target.innerText;
-                    setResumeData({ ...resumeData, projects: newProjects });
-                    saveToLocalStorage({ ...resumeData, projects: newProjects });
+                    updateActiveResume({ ...resumeData, projects: newProjects });
                   }}
                   suppressContentEditableWarning={true}
                   className="section-content"
@@ -531,8 +662,7 @@ const Resume = () => {
                     technologies: ["Tech 1", "Tech 2"]
                   };
                   const newProjects = [...resumeData.projects, newProj];
-                  setResumeData({ ...resumeData, projects: newProjects });
-                  saveToLocalStorage({ ...resumeData, projects: newProjects });
+                  updateActiveResume({ ...resumeData, projects: newProjects });
                 }}
               >
                 + Adicionar Projeto
@@ -552,8 +682,7 @@ const Resume = () => {
                   onBlur={(e) => {
                     const newEdu = [...resumeData.education];
                     newEdu[i].course = e.target.innerText;
-                    setResumeData({ ...resumeData, education: newEdu });
-                    saveToLocalStorage({ ...resumeData, education: newEdu });
+                    updateActiveResume({ ...resumeData, education: newEdu });
                   }}
                   suppressContentEditableWarning={true}
                 >{edu.course}</strong><br />
@@ -562,8 +691,7 @@ const Resume = () => {
                   onBlur={(e) => {
                     const newEdu = [...resumeData.education];
                     newEdu[i].institution = e.target.innerText;
-                    setResumeData({ ...resumeData, education: newEdu });
-                    saveToLocalStorage({ ...resumeData, education: newEdu });
+                    updateActiveResume({ ...resumeData, education: newEdu });
                   }}
                   suppressContentEditableWarning={true}
                 >{edu.institution}</span><br />
@@ -572,8 +700,7 @@ const Resume = () => {
                   onBlur={(e) => {
                     const newEdu = [...resumeData.education];
                     newEdu[i].status = e.target.innerText;
-                    setResumeData({ ...resumeData, education: newEdu });
-                    saveToLocalStorage({ ...resumeData, education: newEdu });
+                    updateActiveResume({ ...resumeData, education: newEdu });
                   }}
                   suppressContentEditableWarning={true}
                 >{edu.status}</em>
@@ -593,8 +720,7 @@ const Resume = () => {
                   onBlur={(e) => {
                     const newLangs = [...resumeData.languages];
                     newLangs[i] = e.target.innerText;
-                    setResumeData({ ...resumeData, languages: newLangs });
-                    saveToLocalStorage({ ...resumeData, languages: newLangs });
+                    updateActiveResume({ ...resumeData, languages: newLangs });
                   }}
                   suppressContentEditableWarning={true}
                 >{lang}</span>
