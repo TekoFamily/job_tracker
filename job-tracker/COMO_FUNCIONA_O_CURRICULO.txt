@@ -62,4 +62,15 @@ Os dados são organizados em um objeto JSON central chamado `resumeData`, que co
 5.  **Gerar PDF**: Clique em "Salvar PDF" e escolha a opção "Salvar como PDF" na tela de impressão que abrirá.
 
 ---
+
+## 6. MÓDULO DE VAGAS RECOMENDADAS (NOVO)
+O sistema evoluiu para incluir inteligência de busca e recomendação de vagas:
+*   **Integração com APIs**: Consumo de vagas reais via Remotive API.
+*   **Normalização (jobData)**: Todos os dados externos são convertidos para um formato padrão antes de processar.
+*   **Motor de Match (Job Matcher)**:
+    *   **Score (0-100)**: Calculado com base em competências técnicas (60%), nível de senioridade (20%) e similaridade de cargo (20%).
+    *   **Análise de Gaps**: O sistema identifica quais habilidades da vaga você já possui e quais são lacunas técnicas.
+*   **Fluxo de Aplicação**: O usuário visualiza o match, analisa a vaga e é redirecionado para o site oficial para realizar a candidatura.
+
+---
 Desenvolvido como parte do ecossistema Job Tracker.

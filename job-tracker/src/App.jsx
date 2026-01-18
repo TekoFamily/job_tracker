@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Resume from './pages/Resume';
+import Jobs from './pages/Jobs';
 import { getCurrentUser } from './services/auth';
 import PropTypes from 'prop-types';
 
@@ -38,6 +39,12 @@ function App() {
         <Route path="/resume" element={
           <PrivateRoute>
             <Resume />
+          </PrivateRoute>
+        } />
+
+        <Route path="/jobs" element={
+          <PrivateRoute>
+            <Jobs />
           </PrivateRoute>
         } />
 

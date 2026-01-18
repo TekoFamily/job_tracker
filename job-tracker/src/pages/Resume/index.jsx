@@ -2,125 +2,140 @@
 import React, { useState, useEffect } from 'react';
 import './Resume.css';
 
+const INITIAL_RESUME_DATA = {
+  name: "José Vinícius Lourenço",
+  role: "Backend Engineer | Junior DBA (Oracle & SQL)",
+  contact: {
+    email: "vviniciuslourenco@gmail.com",
+    phone: "+55 81 995126839",
+    location: "Recife - PE, Brazil (Remote / Hybrid)",
+    linkedin: "https://www.linkedin.com/in/jose-vinicius-louren%C3%A7o-1a6b9014a/",
+    github: "https://github.com/ViniScooper",
+    address: "Recife - PE, Brazil",
+    maritalStatus: ""
+  },
 
+  summary: `
+Backend-focused Python Developer and Junior DBA with solid experience working in real production environments.
+Daily hands-on experience with Python, Flask, RESTful APIs, SQL, and Oracle databases, supporting business-critical systems in production and staging.
 
+Strong background in database operations, including query optimization, PL/SQL routines, data manipulation, and incident resolution.
+Experienced in backend development, ERP systems (TOTVS Protheus, SAP), automations, and technical documentation.
+Comfortable working remotely, collaborating asynchronously, and handling sensitive production data with responsibility.
+`,
 
+  skills: [
+    "Python", "Flask", "RESTful APIs", "Backend validation & error handling",
+    "API design (CRUD, integrations)", "Automation with Python scripts",
+    "SQL (Oracle, MySQL, MariaDB)", "Oracle Database administration (Junior DBA)",
+    "PL/SQL (procedures, functions, packages, triggers)", "Query optimization & performance tuning",
+    "Database schema design", "Production & staging environments", "Backup & restore routines",
+    "Access control & data security", "Git & GitHub", "TORTOISE SVN", "Linux / Terminal",
+    "API testing (Postman, Insomnia)", "Technical documentation", "Remote collaboration (Slack, async teams)",
+    "TOTVS Protheus (AdvPL)", "SAP ABAP (development)", "EQM"
+  ],
 
+  experience: [
+    {
+      role: "Junior DBA / Backend Developer",
+      company: "Informa Software",
+      location: "Recife - PE, Brazil",
+      period: "2024 – Present",
+      bullets: [
+        "Administration and support of Oracle databases in production and staging environments",
+        "Development and maintenance of PL/SQL procedures, functions, packages, and triggers",
+        "Analysis, troubleshooting, and resolution of production database incidents",
+        "Writing, optimizing, and maintaining complex SQL queries for business systems",
+        "Supporting backend systems with Python scripts and internal APIs",
+        "Managing database schema changes and controlled data migrations",
+        "Monitoring performance and assisting in query and process optimization",
+        "Handling access control, permissions, and data integrity",
+        "Documenting database changes, incidents, and technical procedures",
+        "Working closely with developers and analysts to support system evolution"
+      ]
+    },
+    {
+      role: "Junior Software Engineer (AdvPL / ERP)",
+      company: "Cod.ERP Tecnologia LTDA",
+      location: "Recife - PE, Brazil",
+      period: "May 2023 – May 2024",
+      bullets: [
+        "Development and maintenance of ERP solutions using AdvPL (TOTVS Protheus)",
+        "Customization and extension of Protheus modules according to business needs",
+        "Backend development focused on business rules and data processing",
+        "Database interaction using SQL for reports and integrations",
+        "Bug fixing, system improvements, and technical documentation",
+        "Support for ERP implementations and internal users"
+      ]
+    },
+    {
+      role: "SAP ABAP Developer (Internship)",
+      company: "KarneKeijo Logística",
+      location: "Recife - PE, Brazil",
+      period: "Aug 2022 – Mar 2023",
+      bullets: [
+        "Development using SAP ABAP language",
+        "Creation and manipulation of internal tables",
+        "Support for SAP modules and backend processes",
+        "Database interaction and basic SQL operations",
+        "Code contribution, testing, and documentation"
+      ]
+    },
+    {
+      role: "Backend Developer & Automation (Projects / Freelance)",
+      company: "Personal & Freelance Projects",
+      period: "2023 – Present",
+      bullets: [
+        "Built RESTful APIs using Python and Flask",
+        "Developed CRUD systems connected to relational databases",
+        "Created backend validation and structured error handling",
+        "Worked with database modeling and migrations",
+        "Developed automation scripts integrating APIs and databases",
+        "Version control and collaboration using Git and GitHub"
+      ]
+    }
+  ],
 
+  projects: [
+    {
+      name: "Flask REST API – Backend System",
+      description: "RESTful API built with Flask for CRUD operations, database integration, validation, and error handling.",
+      technologies: ["Python", "Flask", "SQL", "MySQL/MariaDB"],
+    },
+    {
+      name: "Database Management & Automations",
+      description: "Python scripts for database manipulation, reporting, and internal automations in production environments.",
+      technologies: ["Python", "SQL", "Oracle"],
+    },
+    {
+      name: "ERP Customizations (TOTVS Protheus)",
+      description: "Custom backend routines and business rules using AdvPL for ERP systems.",
+      technologies: ["AdvPL", "TOTVS Protheus", "SQL"],
+    }
+  ],
 
+  education: [
+    {
+      course: "Technology Degree",
+      institution: "College",
+      status: "In progress"
+    },
+    {
+      course: "Python, Backend & Databases",
+      institution: "Online Courses (Udemy)",
+      status: "Completed / Ongoing"
+    }
+  ],
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+  languages: [
+    "Portuguese – Native",
+    "English – Technical / Intermediate"
+  ]
+};
 
 const Resume = () => {
   const [isEditing, setIsEditing] = useState(false);
-
-  // Initial data (could be loaded from localStorage)
-  const [resumeData, setResumeData] = useState({
-    name: "José Vinícius",
-    role: "Python Developer | Backend & Database Engineer",
-    contact: {
-      email: "seuemail@email.com",
-      phone: "+55 81 99542-5342",
-      location: "Brazil (Remote)",
-      linkedin: "linkedin.com/in/josevinicius",
-      github: "github.com/josevinicius",
-      address: "",
-      maritalStatus: ""
-    },
-    summary: `Python Developer and Junior DBA with hands-on experience in backend development, RESTful APIs, database design, and production data environments. I work daily with Python, SQL, and backend systems, handling real-world data manipulation, migrations, and performance optimization in production and staging databases.\n\nI have experience building APIs with Flask, validating data, handling errors, and working with relational databases such as MySQL, MariaDB, and Oracle. Comfortable working remotely, documenting technical issues, and collaborating asynchronously with technical teams.`,
-    skills: [
-      "Python", "Flask", "RESTful APIs", "Basic GraphQL concepts",
-      "Backend validation and error handling", "SQL (MySQL, MariaDB, Oracle)",
-      "Database schema design", "Database migrations", "Performance tuning",
-      "Production & staging environments", "API testing (Postman / Insomnia)",
-      "Git & GitHub", "Linux / Terminal", "Technical documentation",
-      "Remote collaboration (Slack)"
-    ],
-    experience: [
-      {
-        role: "Junior DBA / Backend Developer",
-        company: "Current Company",
-        location: "Brazil (Remote/Hybrid)",
-        period: "2024 – Present",
-        bullets: [
-          "Development and maintenance of backend APIs using Python and Flask",
-          "Handling data manipulation in production and staging databases",
-          "Writing and optimizing SQL queries for business-critical systems",
-          "Managing database schema changes and migrations safely",
-          "Implementing backend validation and error handling",
-          "Supporting internal systems and automations using Python scripts",
-          "Documenting incidents, bugs, and database changes"
-        ],
-      },
-      {
-        role: "Backend Developer (Projects & Automations)",
-        company: "Personal & Freelance Projects",
-        period: "2023 – Present",
-        bullets: [
-          "Built REST APIs for CRUD operations and integrations",
-          "Developed automation scripts using Python and APIs",
-          "Worked with authentication, data validation, and error handling",
-          "Integrated backend systems with external services",
-          "Version control using Git and GitHub"
-        ],
-      }
-    ],
-
-    education: [
-      {
-        course: "Technology Degree (In Progress)",
-        institution: "College",
-        status: "In progress"
-      },
-      {
-        course: "Python, Backend & Databases",
-        institution: "Online Courses (Udemy)",
-        status: "Completed / Ongoing"
-      }
-    ],
-    languages: [
-      "Portuguese – Native",
-      "English – Technical / Intermediate"
-    ],
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
 
   // Persist changes to localStorage
   useEffect(() => {
@@ -132,6 +147,14 @@ const Resume = () => {
 
   const saveToLocalStorage = (data) => {
     localStorage.setItem('resumeData', JSON.stringify(data));
+  };
+
+  const handleReset = () => {
+    if (window.confirm("Deseja resetar o currículo para os dados padrão do código? Isso apagará suas edições locais.")) {
+      setResumeData(INITIAL_RESUME_DATA);
+      saveToLocalStorage(INITIAL_RESUME_DATA);
+      setIsEditing(false);
+    }
   };
 
   const handleUpdateField = (path, value) => {
@@ -175,6 +198,12 @@ const Resume = () => {
         </div>
 
         <div className="right-actions">
+          {isEditing && (
+            <button onClick={handleReset} className="btn-secondary" style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}>
+              Resetar Padrão
+            </button>
+          )}
+
           <button
             onClick={() => setIsEditing(!isEditing)}
             className={`btn-edit ${isEditing ? 'active' : ''}`}
@@ -209,11 +238,15 @@ const Resume = () => {
           </div>
 
           <div className="resume-contact">
-            <span
-              contentEditable={isEditing}
-              onBlur={(e) => handleUpdateField('contact.email', e.target.innerText)}
-              suppressContentEditableWarning={true}
-            >{resumeData.contact.email}</span>
+            {isEditing ? (
+              <span
+                contentEditable={true}
+                onBlur={(e) => handleUpdateField('contact.email', e.target.innerText)}
+                suppressContentEditableWarning={true}
+              >{resumeData.contact.email}</span>
+            ) : (
+              <a href={`mailto:${resumeData.contact.email}`}>{resumeData.contact.email}</a>
+            )}
             {" | "}
             <span
               contentEditable={isEditing}
@@ -229,20 +262,32 @@ const Resume = () => {
             <br />
             {resumeData.contact.linkedin && (
               <span>
-                LinkedIn: <span
-                  contentEditable={isEditing}
-                  onBlur={(e) => handleUpdateField('contact.linkedin', e.target.innerText)}
-                  suppressContentEditableWarning={true}
-                >{resumeData.contact.linkedin}</span> |
+                LinkedIn: {isEditing ? (
+                  <span
+                    contentEditable={true}
+                    onBlur={(e) => handleUpdateField('contact.linkedin', e.target.innerText)}
+                    suppressContentEditableWarning={true}
+                  >{resumeData.contact.linkedin}</span>
+                ) : (
+                  <a href={resumeData.contact.linkedin.startsWith('http') ? resumeData.contact.linkedin : `https://${resumeData.contact.linkedin}`} target="_blank" rel="noopener noreferrer">
+                    {resumeData.contact.linkedin.replace('https://', '').replace('www.', '')}
+                  </a>
+                )} |
               </span>
             )}
             {resumeData.contact.github && (
               <span>
-                GitHub: <span
-                  contentEditable={isEditing}
-                  onBlur={(e) => handleUpdateField('contact.github', e.target.innerText)}
-                  suppressContentEditableWarning={true}
-                >{resumeData.contact.github}</span>
+                GitHub: {isEditing ? (
+                  <span
+                    contentEditable={true}
+                    onBlur={(e) => handleUpdateField('contact.github', e.target.innerText)}
+                    suppressContentEditableWarning={true}
+                  >{resumeData.contact.github}</span>
+                ) : (
+                  <a href={resumeData.contact.github.startsWith('http') ? resumeData.contact.github : `https://${resumeData.contact.github}`} target="_blank" rel="noopener noreferrer">
+                    {resumeData.contact.github.replace('https://', '').replace('www.', '')}
+                  </a>
+                )}
               </span>
             )}
           </div>
@@ -250,12 +295,13 @@ const Resume = () => {
 
         {/* SUMMARY */}
         <section className="resume-section">
-          <div className="section-title">Professional Summary</div>
+          <div className="section-title">Resumo Profissional</div>
           <div
             className="section-content editable-area"
             contentEditable={isEditing}
             onBlur={(e) => handleUpdateField('summary', e.target.innerText)}
             suppressContentEditableWarning={true}
+            style={{ whiteSpace: 'pre-wrap' }}
           >
             {resumeData.summary}
           </div>
@@ -263,7 +309,7 @@ const Resume = () => {
 
         {/* SKILLS */}
         <section className="resume-section">
-          <div className="section-title">Skills & Keywords</div>
+          <div className="section-title">Habilidades & Competências</div>
           <ul className="skills-grid">
             {resumeData.skills.map((skill, i) => (
               <li key={i} className="skill-item">
@@ -305,7 +351,7 @@ const Resume = () => {
 
         {/* EXPERIENCE */}
         <section className="resume-section">
-          <div className="section-title">Professional Experience</div>
+          <div className="section-title">Experiência Profissional</div>
 
           {resumeData.experience.map((job, i) => (
             <div key={i} className="job-entry">
@@ -320,6 +366,7 @@ const Resume = () => {
                       saveToLocalStorage({ ...resumeData, experience: newExp });
                     }}
                     suppressContentEditableWarning={true}
+                    style={{ fontWeight: 'bold' }}
                   >{job.role}</span>
                   {" - "}
                   <span
@@ -354,7 +401,7 @@ const Resume = () => {
                         saveToLocalStorage({ ...resumeData, experience: newExp });
                       }}
                     >
-                      Remover Experiência
+                      ×
                     </button>
                   )}
                 </div>
@@ -425,9 +472,78 @@ const Resume = () => {
           )}
         </section>
 
+        {/* PROJECTS */}
+        {resumeData.projects && resumeData.projects.length > 0 && (
+          <section className="resume-section">
+            <div className="section-title">Projetos & Destaques</div>
+            {resumeData.projects.map((project, i) => (
+              <div key={i} className="job-entry" style={{ marginBottom: 10 }}>
+                <div className="job-header">
+                  <span
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newProjects = [...resumeData.projects];
+                      newProjects[i].name = e.target.innerText;
+                      setResumeData({ ...resumeData, projects: newProjects });
+                      saveToLocalStorage({ ...resumeData, projects: newProjects });
+                    }}
+                    suppressContentEditableWarning={true}
+                    style={{ fontWeight: 'bold' }}
+                  >{project.name}</span>
+                  {isEditing && (
+                    <button
+                      className="btn-delete-small no-print"
+                      onClick={() => {
+                        const newProjects = resumeData.projects.filter((_, index) => index !== i);
+                        setResumeData({ ...resumeData, projects: newProjects });
+                        saveToLocalStorage({ ...resumeData, projects: newProjects });
+                      }}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+                <div
+                  contentEditable={isEditing}
+                  onBlur={(e) => {
+                    const newProjects = [...resumeData.projects];
+                    newProjects[i].description = e.target.innerText;
+                    setResumeData({ ...resumeData, projects: newProjects });
+                    saveToLocalStorage({ ...resumeData, projects: newProjects });
+                  }}
+                  suppressContentEditableWarning={true}
+                  className="section-content"
+                >
+                  {project.description}
+                </div>
+                <div style={{ fontSize: '9pt', fontStyle: 'italic', marginTop: 2 }}>
+                  Tecnologias: {project.technologies.join(', ')}
+                </div>
+              </div>
+            ))}
+            {isEditing && (
+              <button
+                className="btn-add-small no-print"
+                onClick={() => {
+                  const newProj = {
+                    name: "Nome do Projeto",
+                    description: "Descrição curta do projeto.",
+                    technologies: ["Tech 1", "Tech 2"]
+                  };
+                  const newProjects = [...resumeData.projects, newProj];
+                  setResumeData({ ...resumeData, projects: newProjects });
+                  saveToLocalStorage({ ...resumeData, projects: newProjects });
+                }}
+              >
+                + Adicionar Projeto
+              </button>
+            )}
+          </section>
+        )}
+
         {/* EDUCATION */}
         <section className="resume-section">
-          <div className="section-title">Education</div>
+          <div className="section-title">Educação</div>
           <div className="section-content">
             {resumeData.education.map((edu, i) => (
               <div key={i} style={{ marginBottom: 6 }}>
@@ -468,7 +584,7 @@ const Resume = () => {
 
         {/* LANGUAGES */}
         <section className="resume-section">
-          <div className="section-title">Languages</div>
+          <div className="section-title">Idiomas</div>
           <div className="section-content">
             {resumeData.languages.map((lang, i) => (
               <span key={i}>

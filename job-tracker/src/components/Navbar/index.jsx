@@ -36,6 +36,10 @@ const Navbar = () => {
                         <FileText size={20} />
                         <span>Currículo</span>
                     </Link>
+                    <Link to="/jobs" className={`nav-item ${isActive('/jobs') ? 'active' : ''}`}>
+                        <Briefcase size={20} />
+                        <span>Vagas</span>
+                    </Link>
                     <button onClick={handleLogout} className="nav-item logout-btn">
                         <LogOut size={20} />
                         <span>Sair</span>
