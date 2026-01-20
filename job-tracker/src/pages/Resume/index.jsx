@@ -160,6 +160,13 @@ const LABELS = {
   }
 };
 
+
+
+
+
+
+
+
 // Gera ID único
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
@@ -544,7 +551,7 @@ const Resume = () => {
           <div className="section-title">{t('experience')}</div>
 
           {resumeData.experience.map((job, i) => (
-            <div key={i} className="job-entry">
+            <div key={i} className={`job-entry ${job.forcePageBreak ? 'force-page-break' : ''}`}>
               <div className="job-header">
                 <div>
                   <span
@@ -587,7 +594,6 @@ const Resume = () => {
                         updateActiveResume({ ...resumeData, experience: newExp });
                       }}
                     >
-                      ×
                     </button>
                   )}
                 </div>
@@ -633,127 +639,189 @@ const Resume = () => {
                   </button>
                 )}
               </ul>
+              {isEditing && (
+                <div className="no-print" style={{ marginTop: 5 }}>
+                  <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={job.forcePageBreak || false}
+                      onChange={(e) => {
+                        const newExp = [...resumeData.experience];
+                        newExp[i].forcePageBreak = e.target.checked;
+                        updateActiveResume({ ...resumeData, experience: newExp });
+                      }}
+                      style={{ marginRight: 5 }}
+                    />
+                    Pular página após este item 📄
+                  </label>
+                </div>
+              )}
             </div>
-          ))}
-          {isEditing && (
-            <button
-              className="btn-add-experience no-print"
-              onClick={() => {
-                const newJob = {
-                  role: "Cargo",
-                  company: "Empresa",
-                  period: "20XX - 20XX",
-                  bullets: ["Nova atividade"]
-                };
-                const newExp = [...resumeData.experience, newJob];
-                updateActiveResume({ ...resumeData, experience: newExp });
-              }}
-            >
-              + Adicionar Nova Experiência
-            </button>
-          )}
-        </section>
+          ))
+          }
+          {
+            isEditing && (
+              <button
+                className="btn-add-experience no-print"
+                onClick={() => {
+                  const newJob = {
+                    role: "Cargo",
+                    company: "Empresa",
+                    period: "20XX - 20XX",
+                    bullets: ["Nova atividade"]
+                  };
+                  const newExp = [...resumeData.experience, newJob];
+                  updateActiveResume({ ...resumeData, experience: newExp });
+                }}
+              >
+                + Adicionar Nova Experiência
+              </button>
+            )
+          }
+        </section >
 
         {/* PROJECTS */}
-        {resumeData.projects && resumeData.projects.length > 0 && (
-          <section className="resume-section">
-            <div className="section-title">{t('projects')}</div>
-            {resumeData.projects.map((project, i) => (
-              <div key={i} className="job-entry" style={{ marginBottom: 10 }}>
-                <div className="job-header">
-                  <span
+        {
+          (isEditing || (resumeData.projects && resumeData.projects.length > 0)) && (
+            <section className="resume-section">
+              <div className="section-title">{t('projects')}</div>
+              {resumeData.projects?.map((project, i) => (
+                <div key={i} className="job-entry" style={{ marginBottom: 10 }}>
+                  <div className="job-header">
+                    <span
+                      contentEditable={isEditing}
+                      onBlur={(e) => {
+                        const newProjects = [...(resumeData.projects || [])];
+                        newProjects[i].name = e.target.innerText;
+                        updateActiveResume({ ...resumeData, projects: newProjects });
+                      }}
+                      suppressContentEditableWarning={true}
+                      style={{ fontWeight: 'bold' }}
+                    >{project.name}</span>
+                    {isEditing && (
+                      <button
+                        className="btn-delete-small no-print"
+                        onClick={() => {
+                          const newProjects = resumeData.projects.filter((_, index) => index !== i);
+                          updateActiveResume({ ...resumeData, projects: newProjects });
+                        }}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                  <div
                     contentEditable={isEditing}
                     onBlur={(e) => {
-                      const newProjects = [...resumeData.projects];
-                      newProjects[i].name = e.target.innerText;
+                      const newProjects = [...(resumeData.projects || [])];
+                      newProjects[i].description = e.target.innerText;
                       updateActiveResume({ ...resumeData, projects: newProjects });
                     }}
                     suppressContentEditableWarning={true}
-                    style={{ fontWeight: 'bold' }}
-                  >{project.name}</span>
-                  {isEditing && (
-                    <button
-                      className="btn-delete-small no-print"
-                      onClick={() => {
-                        const newProjects = resumeData.projects.filter((_, index) => index !== i);
+                    className="section-content"
+                  >
+                    {project.description}
+                  </div>
+                  <div style={{ fontSize: '9pt', fontStyle: 'italic', marginTop: 2 }}>
+                    {t('technologies')}: <span
+                      contentEditable={isEditing}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => {
+                        const newProjects = [...(resumeData.projects || [])];
+                        // Split text by comma to recreate the array
+                        newProjects[i].technologies = e.target.innerText.split(',').map(t => t.trim()).filter(t => t.length > 0);
                         updateActiveResume({ ...resumeData, projects: newProjects });
                       }}
                     >
-                      ×
-                    </button>
-                  )}
+                      {project.technologies.join(', ')}
+                    </span>
+                  </div>
                 </div>
-                <div
-                  contentEditable={isEditing}
-                  onBlur={(e) => {
-                    const newProjects = [...resumeData.projects];
-                    newProjects[i].description = e.target.innerText;
+              ))}
+              {isEditing && (
+                <button
+                  className="btn-add-small no-print"
+                  onClick={() => {
+                    const newProj = {
+                      name: "Nome do Projeto",
+                      description: "Descrição curta do projeto.",
+                      technologies: ["Tech 1", "Tech 2"]
+                    };
+                    const newProjects = [...(resumeData.projects || []), newProj];
                     updateActiveResume({ ...resumeData, projects: newProjects });
                   }}
-                  suppressContentEditableWarning={true}
-                  className="section-content"
                 >
-                  {project.description}
-                </div>
-                <div style={{ fontSize: '9pt', fontStyle: 'italic', marginTop: 2 }}>
-                  {t('technologies')}: {project.technologies.join(', ')}
-                </div>
-              </div>
-            ))}
-            {isEditing && (
-              <button
-                className="btn-add-small no-print"
-                onClick={() => {
-                  const newProj = {
-                    name: "Nome do Projeto",
-                    description: "Descrição curta do projeto.",
-                    technologies: ["Tech 1", "Tech 2"]
-                  };
-                  const newProjects = [...resumeData.projects, newProj];
-                  updateActiveResume({ ...resumeData, projects: newProjects });
-                }}
-              >
-                + Adicionar Projeto
-              </button>
-            )}
-          </section>
-        )}
+                  + Adicionar Projeto
+                </button>
+              )}
+            </section>
+          )
+        }
 
         {/* EDUCATION */}
         <section className="resume-section">
           <div className="section-title">{t('education')}</div>
           <div className="section-content">
             {resumeData.education.map((edu, i) => (
-              <div key={i} style={{ marginBottom: 6 }}>
-                <strong
-                  contentEditable={isEditing}
-                  onBlur={(e) => {
-                    const newEdu = [...resumeData.education];
-                    newEdu[i].course = e.target.innerText;
-                    updateActiveResume({ ...resumeData, education: newEdu });
-                  }}
-                  suppressContentEditableWarning={true}
-                >{edu.course}</strong><br />
-                <span
-                  contentEditable={isEditing}
-                  onBlur={(e) => {
-                    const newEdu = [...resumeData.education];
-                    newEdu[i].institution = e.target.innerText;
-                    updateActiveResume({ ...resumeData, education: newEdu });
-                  }}
-                  suppressContentEditableWarning={true}
-                >{edu.institution}</span><br />
-                <em
-                  contentEditable={isEditing}
-                  onBlur={(e) => {
-                    const newEdu = [...resumeData.education];
-                    newEdu[i].status = e.target.innerText;
-                    updateActiveResume({ ...resumeData, education: newEdu });
-                  }}
-                  suppressContentEditableWarning={true}
-                >{edu.status}</em>
+              <div key={i} className="education-item" style={{ marginBottom: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ flex: 1 }}>
+                  <strong
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newEdu = [...resumeData.education];
+                      newEdu[i].course = e.target.innerText;
+                      updateActiveResume({ ...resumeData, education: newEdu });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{edu.course}</strong><br />
+                  <span
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newEdu = [...resumeData.education];
+                      newEdu[i].institution = e.target.innerText;
+                      updateActiveResume({ ...resumeData, education: newEdu });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{edu.institution}</span><br />
+                  <em
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newEdu = [...resumeData.education];
+                      newEdu[i].status = e.target.innerText;
+                      updateActiveResume({ ...resumeData, education: newEdu });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{edu.status}</em>
+                </div>
+                {isEditing && (
+                  <button
+                    className="btn-delete-small no-print"
+                    onClick={() => {
+                      const newEdu = resumeData.education.filter((_, index) => index !== i);
+                      updateActiveResume({ ...resumeData, education: newEdu });
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
               </div>
             ))}
+            {isEditing && (
+              <button
+                className="btn-add-small no-print"
+                onClick={() => {
+                  const newEdu = {
+                    course: "Nome do Curso",
+                    institution: "Instituição de Ensino",
+                    status: "Concluído / Em andamento"
+                  };
+                  const newEducation = [...resumeData.education, newEdu];
+                  updateActiveResume({ ...resumeData, education: newEducation });
+                }}
+              >
+                + Adicionar Educação
+              </button>
+            )}
           </div>
         </section>
 
@@ -777,8 +845,8 @@ const Resume = () => {
             ))}
           </div>
         </section>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

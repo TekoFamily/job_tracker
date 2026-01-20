@@ -94,6 +94,11 @@
     page-break-inside: avoid;
 }
 
+.force-page-break {
+    page-break-after: always;
+    break-after: page;
+}
+
 .job-header {
     display: flex;
     justify-content: space-between;
@@ -249,7 +254,9 @@
 
 .skill-item:hover .btn-delete-small,
 .bullet-item:hover .btn-delete-small,
-.job-period-container:hover .btn-delete-small {
+.job-period-container:hover .btn-delete-small,
+.job-header:hover .btn-delete-small,
+.education-item:hover .btn-delete-small {
     opacity: 1;
 }
 
@@ -287,6 +294,16 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.education-item {
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.education-item:hover {
+    background-color: #f9fafb;
 }
 
 @media print {

@@ -3,8 +3,46 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import { fetchRecommendedJobs } from '../../services/jobService';
 import { calculateJobMatch } from '../../services/matcherService';
-import { Briefcase, CheckCircle, AlertCircle, ExternalLink, Loader2 } from 'lucide-react';
+import { Briefcase, CheckCircle, AlertCircle, ExternalLink, Loader2, Globe, Server, Building2, Code2 } from 'lucide-react';
 import './Jobs.css';
+
+const JOB_BOARDS = [
+    {
+        category: "Tech & Remote-First",
+        icon: <Globe size={20} />,
+        sites: [
+            { name: "Remote OK", url: "https://remoteok.com", desc: "Startups e empresas globais" },
+            { name: "We Work Remotely", url: "https://weworkremotely.com", desc: "Backend, dev, infra, SQL/DBA" },
+            { name: "Remotive", url: "https://remotive.com", desc: "Newsletter + vagas remotas" },
+            { name: "FlexJobs", url: "https://flexjobs.com", desc: "Remotas/Híbrido (Curadoria)" }
+        ]
+    },
+    {
+        category: "Tech Focus",
+        icon: <Server size={20} />,
+        sites: [
+            { name: "Stack Overflow Jobs", url: "https://stackoverflow.com/jobs", desc: "Muitas vagas de dev" },
+            { name: "GitHub Jobs", url: "https://jobs.github.com", desc: "Dev roles, APIs, backend" }
+        ]
+    },
+    {
+        category: "Enterprise & Startups",
+        icon: <Building2 size={20} />,
+        sites: [
+            { name: "Indeed (Global)", url: "https://indeed.com", desc: "Filtros por idioma e remote" },
+            { name: "Glassdoor", url: "https://glassdoor.com", desc: "Vagas + Reviews" },
+            { name: "Wellfound (AngelList)", url: "https://wellfound.com", desc: "Startups reais, 100% gratuita. Backend/DB/SAP." }
+        ]
+    },
+    {
+        category: "Coding Challenges & Roles",
+        icon: <Code2 size={20} />,
+        sites: [
+            { name: "HackerRank Jobs", url: "https://www.hackerrank.com/jobs", desc: "Code challenges + vagas" },
+            { name: "LeetCode Jobs", url: "https://leetcode.com/jobs", desc: "Vagas para devs e SRE" }
+        ]
+    }
+];
 
 const Jobs = () => {
     const [jobs, setJobs] = useState([]);
@@ -126,6 +164,31 @@ const Jobs = () => {
                         <p>Tente atualizar a página ou verificar sua conexão.</p>
                     </div>
                 )}
+
+                <section className="international-boards-section">
+                    <h2 className="section-header">🌍 Melhores Sites para Vagas Internacionais</h2>
+                    <div className="boards-grid">
+                        {JOB_BOARDS.map((category, i) => (
+                            <div key={i} className="board-card glass-panel">
+                                <div className="board-header">
+                                    {category.icon}
+                                    <h3>{category.category}</h3>
+                                </div>
+                                <ul className="site-list">
+                                    {category.sites.map((site, j) => (
+                                        <li key={j}>
+                                            <a href={site.url} target="_blank" rel="noopener noreferrer" className="site-link">
+                                                <strong>{site.name}</strong>
+                                                <ExternalLink size={12} className="link-icon" />
+                                            </a>
+                                            <span className="site-desc">{site.desc}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </section>
             </div>
         </>
     );

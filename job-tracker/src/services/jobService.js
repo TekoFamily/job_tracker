@@ -37,17 +37,63 @@ const normalizeRemotive = (rawJob) => {
     };
 };
 
+const ARBEITNOW_API = 'https://www.arbeitnow.com/api/job-board-api';
+
+/**
+ * Normalizes Arbeitnow API data into standard jobData format.
+ */
+const normalizeArbeitnow = (rawJob) => {
+    return {
+        id: rawJob.slug,
+        title: rawJob.title,
+        company: rawJob.company_name,
+        location: rawJob.location,
+        description: rawJob.description.replace(/<[^>]*>?/gm, '').slice(0, 500) + '...', // Clean HTML and truncate
+        tags: rawJob.tags || [],
+        url: rawJob.url,
+        postedAt: new Date(rawJob.created_at * 1000), // Unix timestamp
+        salary: 'Não informado',
+        level: detectLevel(rawJob.title),
+        source: 'Arbeitnow',
+        originalTags: rawJob.tags // Useful for exact matching
+    };
+};
+
 export const fetchRecommendedJobs = async (category = 'software-dev') => {
     try {
-        const response = await fetch(`${REMOTIVE_API}?category=${category}&limit=20`);
-        const data = await response.json();
+        // Fetch from multiple sources in parallel
+        const [remotiveRes, arbeitnowRes] = await Promise.allSettled([
+            fetch(`${REMOTIVE_API}?category=${category}&limit=15`),
+            fetch(ARBEITNOW_API)
+        ]);
 
-        if (!data.jobs) return [];
+        let allJobs = [];
 
-        return data.jobs.map(normalizeRemotive);
+        // Process Remotive Results
+        if (remotiveRes.status === 'fulfilled') {
+            const data = await remotiveRes.value.json();
+            if (data.jobs) {
+                allJobs = [...allJobs, ...data.jobs.map(normalizeRemotive)];
+            }
+        }
+
+        // Process Arbeitnow Results
+        if (arbeitnowRes.status === 'fulfilled') {
+            const data = await arbeitnowRes.value.json();
+            if (data.data) {
+                // Filter for tech-related jobs roughly since Arbeitnow is mixed
+                const techJobs = data.data.filter(j =>
+                    j.title.toLowerCase().match(/developer|engineer|software|data|fullstack|backend|frontend|devops|tech/)
+                );
+                allJobs = [...allJobs, ...techJobs.map(normalizeArbeitnow)];
+            }
+        }
+
+        // Shuffle results to mix sources
+        return allJobs.sort(() => Math.random() - 0.5);
+
     } catch (error) {
         console.error('Error fetching jobs:', error);
-        // Return empty list or fallback mock data for demo robustness
         return [];
     }
 };
