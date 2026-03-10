@@ -3,137 +3,131 @@ import React, { useState, useEffect } from 'react';
 import './Resume.css';
 import ResumeHistoryModal from '../../components/ResumeHistory/ResumeHistoryModal';
 
+
+
+
+
+
+
+
+
 const INITIAL_RESUME_DATA = {
   lang: "pt", // pt or en
-  name: "José Vinícius Lourenço",
-  role: "Backend Engineer | Junior DBA (Oracle & SQL)",
-  contact: {
-    email: "vviniciuslourenco@gmail.com",
-    phone: "+55 81 995126839",
-    location: "Recife - PE, Brazil (Remote / Hybrid)",
-    linkedin: "https://www.linkedin.com/in/jose-vinicius-louren%C3%A7o-1a6b9014a/",
-    github: "https://github.com/ViniScooper",
-    address: "Recife - PE, Brazil",
-    maritalStatus: ""
+ 
+ 
+  "name": "José Vinícius Lourenço",
+  "role": "Junior ABAP Developer | Backend & Database Specialist",
+  "contact": {
+    "email": "vviniciuslourenco@gmail.com",
+    "phone": "+55 81 995126839",
+    "location": "Recife - PE, Brazil",
+    "linkedin": "https://www.linkedin.com/in/jose-vinicius-louren%C3%A7o-1a6b9014a/",
+    "github": "https://github.com/ViniScooper"
   },
 
-  summary: `
-Backend-focused Python Developer and Junior DBA with solid experience working in real production environments.
-Daily hands-on experience with Python, Flask, RESTful APIs, SQL, and Oracle databases, supporting business-critical systems in production and staging.
+  "summary": "Software Engineer with a strong background in Backend and Databases, currently focused on a specialized career in SAP ABAP. Possesses 1 year and 2 months of practical experience in ABAP development (MM Module focus) and robust knowledge of modern development workflows (Git, SVN, Docker) gained at international consultancy Vanaci. Currently working as a Junior DBA/Backend Engineer, providing a solid foundation in SQL performance tuning and logic. Eager to join EY's collaborative team in Recife.",
 
-Strong background in database operations, including query optimization, PL/SQL routines, data manipulation, and incident resolution.
-Experienced in backend development, ERP systems (TOTVS Protheus, SAP), automations, and technical documentation.
-Comfortable working remotely, collaborating asynchronously, and handling sensitive production data with responsibility.
-`,
-
-  skills: [
-    "Python", "Flask", "RESTful APIs", "Backend validation & error handling",
-    "API design (CRUD, integrations)", "Automation with Python scripts",
-    "SQL (Oracle, MySQL, MariaDB)", "Oracle Database administration (Junior DBA)",
-    "PL/SQL (procedures, functions, packages, triggers)", "Query optimization & performance tuning",
-    "Database schema design", "Production & staging environments", "Backup & restore routines",
-    "Access control & data security", "Git & GitHub", "TORTOISE SVN", "Linux / Terminal",
-    "API testing (Postman, Insomnia)", "Technical documentation", "Remote collaboration (Slack, async teams)",
-    "TOTVS Protheus (AdvPL)", "SAP ABAP (development)", "EQM"
+  "skills": [
+    "SAP ABAP (Reports, ALV, Dictionary)",
+    "SAP MM Module (Functional & Technical knowledge)",
+    "ABAP Debugging & Troubleshooting",
+    "Version Control (Git, GitHub, SVN/Tortoise)",
+    "Infrastructure Tools (Docker, MobaXterm, Putty)",
+    "SQL (OpenSQL, Native SQL, Oracle, PL/SQL)",
+    "Regex in ABAP",
+    "Performance Tuning (Database & Code)",
+    "Python", "Restful APIs",
+    "ERP Logic (Experience with SAP & TOTVS Protheus)"
   ],
 
-  experience: [
+  "experience": [
     {
-      role: "Junior DBA / Backend Developer",
-      company: "Informa Software",
-      location: "Recife - PE, Brazil",
-      period: "2024 – Present",
-      bullets: [
-        "Administration and support of Oracle databases in production and staging environments",
-        "Development and maintenance of PL/SQL procedures, functions, packages, and triggers",
-        "Analysis, troubleshooting, and resolution of production database incidents",
-        "Writing, optimizing, and maintaining complex SQL queries for business systems",
-        "Supporting backend systems with Python scripts and internal APIs",
-        "Managing database schema changes and controlled data migrations",
-        "Monitoring performance and assisting in query and process optimization",
-        "Handling access control, permissions, and data integrity",
-        "Documenting database changes, incidents, and technical procedures",
-        "Working closely with developers and analysts to support system evolution"
+      "role": "Junior DBA / Backend Developer",
+      "company": "Informa Software",
+      "location": "Recife - PE, Brazil",
+      "period": "2024 – Present",
+      "bullets": [
+        "Developing complex SQL queries and PL/SQL procedures (transferable logic to SAP HANA/OpenSQL).",
+        "Performance tuning of database queries to reduce latency.",
+        "Backend support using Python and ensuring data integrity in production environments.",
+        "Creating technical documentation and managing access control."
       ]
     },
     {
-      role: "Junior Software Engineer (AdvPL / ERP)",
-      company: "Cod.ERP Tecnologia LTDA",
-      location: "Recife - PE, Brazil",
-      period: "May 2023 – May 2024",
-      bullets: [
-        "Development and maintenance of ERP solutions using AdvPL (TOTVS Protheus)",
-        "Customization and extension of Protheus modules according to business needs",
-        "Backend development focused on business rules and data processing",
-        "Database interaction using SQL for reports and integrations",
-        "Bug fixing, system improvements, and technical documentation",
-        "Support for ERP implementations and internal users"
+      "role": "IT Systems Analyst (Intern)",
+      "company": "Vanaci",
+      "location": "Portugal (Remote Collaboration)",
+      "period": "2024 (6 months)",
+      "bullets": [
+        "Managed code versioning and repositories using Git, GitHub, and SVN (Tortoise), ensuring code integrity across teams.",
+        "Handled server connections and remote environment management using MobaXterm and Putty.",
+        "Utilized Docker for containerization to standardize development environments.",
+        "Supported system management routines and technical documentation for international projects."
       ]
     },
     {
-      role: "SAP ABAP Developer (Internship)",
-      company: "KarneKeijo Logística",
-      location: "Recife - PE, Brazil",
-      period: "Aug 2022 – Mar 2023",
-      bullets: [
-        "Development using SAP ABAP language",
-        "Creation and manipulation of internal tables",
-        "Support for SAP modules and backend processes",
-        "Database interaction and basic SQL operations",
-        "Code contribution, testing, and documentation"
+      "role": "SAP ABAP Developer (Internship)",
+      "company": "KarneKeijo Logística",
+      "location": "Recife - PE, Brazil",
+      "period": "Aug 2022 – Oct 2023 (1 year, 2 months)",
+      "bullets": [
+        "14 months of hands-on experience supporting the SAP MM (Materials Management) module.",
+        "Development and maintenance of ABAP reports, ALV, and internal tables.",
+        "Debugging standard and Z programs to identify root causes of issues.",
+        "Performing SQL operations and data manipulation within SAP.",
+        "Collaborating with functional consultants to implement business requirements."
       ]
     },
     {
-      role: "Backend Developer & Automation (Projects / Freelance)",
-      company: "Personal & Freelance Projects",
-      period: "2023 – Present",
-      bullets: [
-        "Built RESTful APIs using Python and Flask",
-        "Developed CRUD systems connected to relational databases",
-        "Created backend validation and structured error handling",
-        "Worked with database modeling and migrations",
-        "Developed automation scripts integrating APIs and databases",
-        "Version control and collaboration using Git and GitHub"
+      "role": "Junior Software Engineer (ERP / Backend)",
+      "company": "Cod.ERP Tecnologia LTDA",
+      "location": "Recife - PE, Brazil",
+      "period": "May 2023 – May 2024",
+      "bullets": [
+        "Development in AdvPL (TOTVS Protheus), applying ERP logic similar to SAP.",
+        "Implementation of backend business rules and database integrations.",
+        "Support for ERP system modules and user assistance."
       ]
     }
   ],
 
-  projects: [
+  "education": [
     {
-      name: "Flask REST API – Backend System",
-      description: "RESTful API built with Flask for CRUD operations, database integration, validation, and error handling.",
-      technologies: ["Python", "Flask", "SQL", "MySQL/MariaDB"],
+      "course": "Curso SAP ABAP para desenvolvedores",
+      "institution": "Aline Sebrian Damasceno (Udemy)",
+      "status": "Completed (97%)"
     },
     {
-      name: "Database Management & Automations",
-      description: "Python scripts for database manipulation, reporting, and internal automations in production environments.",
-      technologies: ["Python", "SQL", "Oracle"],
+      "course": "SAP ABAP Training - in Plain English",
+      "institution": "Siva Prasad (Udemy)",
+      "status": "Completed"
     },
     {
-      name: "ERP Customizations (TOTVS Protheus)",
-      description: "Custom backend routines and business rules using AdvPL for ERP systems.",
-      technologies: ["AdvPL", "TOTVS Protheus", "SQL"],
+      "course": "ABAP SAP - Regex!",
+      "institution": "AbapFox Bertani",
+      "status": "Completed"
+    },
+    {
+      "course": "Technology Degree (Systems Analysis and Development)",
+      "institution": "DESCOMPLICA",
+      "status": "Graduation: July 2026"
+    },
+    {
+      "course": "Oracle Database SQL & PL/SQL",
+      "institution": "Oracle University",
+      "status": "Completed"
     }
   ],
 
-  education: [
-    {
-      course: "Technology Degree",
-      institution: "College",
-      status: "In progress"
-    },
-    {
-      course: "Python, Backend & Databases",
-      institution: "Online Courses (Udemy)",
-      status: "Completed / Ongoing"
-    }
-  ],
-
-  languages: [
+  "languages": [
     "Portuguese – Native",
-    "English – Technical / Intermediate"
+    "English – Professional / Technical"
   ]
-};
+}
+
+
+
+
 
 const LABELS = {
   pt: {
