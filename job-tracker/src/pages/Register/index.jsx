@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Briefcase } from 'lucide-react';
 import { register } from '../../services/auth';
 import Input from '../../components/Form/Input';
+import { toast } from 'sonner';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -17,9 +18,11 @@ const Register = () => {
         e.preventDefault();
         const result = await register(formData.email, formData.password, formData.name);
         if (result.success) {
+            toast.success('Conta criada com sucesso! Faça o login.');
             navigate('/login');
         } else {
             setError(result.message || 'Falha no cadastro');
+            toast.error(result.message || 'Falha no cadastro');
         }
     };
 

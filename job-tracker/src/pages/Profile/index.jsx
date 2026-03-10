@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import Input from '../../components/Form/Input';
 import { getProfile, saveProfile } from '../../services/storage';
+import { toast } from 'sonner';
 
 const Profile = () => {
     const [profile, setProfile] = useState({
         name: '', email: '', age: '', currentRole: '', targetRole: '', experience: '', education: '', skills: ''
     });
-    const [msg, setMsg] = useState('');
 
     useEffect(() => {
         setProfile(getProfile());
@@ -20,8 +20,7 @@ const Profile = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         saveProfile(profile);
-        setMsg('Perfil salvo com sucesso!');
-        setTimeout(() => setMsg(''), 3000);
+        toast.success('Perfil salvo com sucesso!');
     };
 
     return (
@@ -59,7 +58,6 @@ const Profile = () => {
                         <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
                             Salvar Perfil
                         </button>
-                        {msg && <p style={{ textAlign: 'center', marginTop: '1rem', color: 'var(--status-approved)' }}>{msg}</p>}
                     </form>
                 </div>
             </div>

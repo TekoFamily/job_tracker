@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Briefcase } from 'lucide-react';
 import { login } from '../../services/auth';
 import Input from '../../components/Form/Input';
+import { toast } from 'sonner';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -17,9 +18,11 @@ const Login = () => {
         e.preventDefault();
         const result = await login(formData.email, formData.password);
         if (result.success) {
+            toast.success('Login realizado com sucesso!');
             navigate('/dashboard');
         } else {
             setError(result.message);
+            toast.error(result.message || 'Erro ao realizar login');
         }
     };
 

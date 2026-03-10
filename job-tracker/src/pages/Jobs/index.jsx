@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import { fetchRecommendedJobs } from '../../services/jobService';
 import { calculateJobMatch } from '../../services/matcherService';
 import { Briefcase, CheckCircle, AlertCircle, ExternalLink, Loader2, Globe, Server, Building2, Code2 } from 'lucide-react';
 import './Jobs.css';
+import { toast } from 'sonner';
+import SkeletonJobCard from '../../components/SkeletonJobCard';
 
 const JOB_BOARDS = [
     {
@@ -56,14 +57,22 @@ const Jobs = () => {
             setResumeData(JSON.parse(savedResume));
         }
 
-        loadJobs();
+        loadJobs(true);
     }, []);
 
-    const loadJobs = async () => {
+    const loadJobs = async (isInitial = false) => {
         setLoading(true);
         const data = await fetchRecommendedJobs();
         setJobs(data);
         setLoading(false);
+        
+        if (!isInitial) {
+            if (data.length > 0) {
+                toast.success(`${data.length} vagas atualizadas!`);
+            } else {
+                toast.error('Não foi possível carregar as vagas no momento.');
+            }
+        }
     };
 
     const getMatchedJobs = () => {
@@ -87,7 +96,7 @@ const Jobs = () => {
                         <p className="page-subtitle">Com base no seu currículo atual e experiências.</p>
                     </div>
                     {!loading && (
-                        <button onClick={loadJobs} className="btn-secondary">Atualizar Vagas</button>
+                        <button onClick={() => loadJobs(false)} className="btn-secondary">Atualizar Vagas</button>
                     )}
                 </header>
 
@@ -99,9 +108,8 @@ const Jobs = () => {
                 )}
 
                 {loading ? (
-                    <div className="loading-state">
-                        <Loader2 className="spinner" size={40} />
-                        <p>Buscando as melhores oportunidades para você...</p>
+                    <div className="jobs-grid">
+                        {[1, 2, 3, 4, 5, 6].map(i => <SkeletonJobCard key={i} />)}
                     </div>
                 ) : (
                     <div className="jobs-grid">
