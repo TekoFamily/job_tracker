@@ -11,7 +11,7 @@ const statusColors = {
     'Segunda Entrevista': 'var(--status-interview)',
 };
 
-const CardCandidatura = ({ application, onEdit, onDelete }) => {
+const CardCandidatura = ({ application, onEdit, onDelete, isCompact }) => {
     const { id, company, role, link, date, status, notes } = application;
 
     const statusStyle = {
@@ -21,7 +21,7 @@ const CardCandidatura = ({ application, onEdit, onDelete }) => {
     };
 
     return (
-        <div className="glass-panel card-application animate-fade-in">
+        <div className={`glass-panel card-application ${!isCompact ? 'animate-fade-in' : ''} ${isCompact ? 'card-compact' : ''}`}>
             <div className="card-header">
                 <div>
                     <h3 className="company-name">{company}</h3>
@@ -66,13 +66,10 @@ CardCandidatura.propTypes = {
         id: PropTypes.string.isRequired,
         company: PropTypes.string.isRequired,
         role: PropTypes.string,
-        link: PropTypes.string,
-        date: PropTypes.string,
-        status: PropTypes.string,
-        notes: PropTypes.string,
     }).isRequired,
     onEdit: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    isCompact: PropTypes.bool,
 };
 
 export default CardCandidatura;

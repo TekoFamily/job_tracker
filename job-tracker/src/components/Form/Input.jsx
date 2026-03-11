@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 const Input = ({ label, id, type = 'text', ...props }) => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-            {label && <label htmlFor={id} style={{ color: '#020202ff', fontSize: '0.9rem', fontWeight: 500 }}>{label}</label>}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
+            {label && <label htmlFor={id} style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>{label}</label>}
             <input
                 id={id}
                 type={type}

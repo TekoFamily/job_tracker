@@ -12,15 +12,18 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
         }}>
             <div className="glass-panel animate-fade-in" style={{
-                width: '90%', maxWidth: '500px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto'
+                width: '95%', maxWidth: '550px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', borderRadius: '16px'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, margin: 0 }}>{title}</h2>
-                    <button onClick={onClose} style={{ background: 'transparent', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0' }}>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, margin: 0, color: '#1e293b' }}>{title}</h2>
+                    <button onClick={onClose} className="icon-btn" style={{ margin: '-0.5rem' }}>
                         <X size={24} />
                     </button>
                 </div>
-                {children}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {children}
+                </div>
             </div>
         </div>
     );

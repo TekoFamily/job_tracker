@@ -66,3 +66,36 @@ A pontuação é composta de três pesos principais definidos no sistema:
    - Procura palavras-chave com mais de 3 letras do título da vaga e tenta achar no sumário ou no cargo atual que está gravado no currículo.
 
 Essas lógicas juntas oferecem ao usuário o resultado visual da chance de ir bem em um processo seletivo (*score* em forma de porcentagem).
+
+---
+
+## 5. Interface e Experiência do Usuário (UI/UX)
+
+A aplicação foi rigorosamente projetada para entregar uma experiência de ponta (nível *Enterprise*), utilizando padrões modernos de design e micro-interações:
+
+1. **Roteamento SPA (Single Page Application):**
+   - Para evitar erros de 404 ao recarregar rotas em produção (como no Vercel), o projeto inclui um arquivo `vercel.json` com regras de *rewrite*, forçando todos os caminhos a serem resolvidos pelo arquivo físico `index.html` gerado no build do React.
+2. **Notificações em Tempo Real (Toasts):**
+   - Utiliza a biblioteca `sonner` para disparar feedbacks visuais de sucesso ou erro (ex: credenciais inválidas, currículo salvo, vaga movida com sucesso) no canto da tela, engajando o usuário instantaneamente.
+3. **Loading States (Skeleton Screens):**
+   - Ao puxar as vagas remotas na página `/jobs` (o que pode demorar devido às APIs externas HTTP), a aplicação renderiza um `SkeletonJobCard`. Essa animação de "shimmer" carrega um esqueleto cinza com o mesmo formato do card original, melhorando a percepção de espera.
+4. **Dashboard e Data Visualization (Analytics):**
+   - **Gráficos (Recharts):** O painel de candidaturas possui um gráfico animado de rosca (Pie Chart) renderizado através do componente `ResponsiveContainer`, que compila visualmente qual a proporção de cada *status* de candidatura que o usuário detém.
+   - **Kanban Board (`@hello-pangea/dnd`):** As vagas aplicadas são organizadas num sistema de drag-and-drop (Arrastar e Soltar) inspirado no Trello e Jira. O usuário pode alterar em tempo real o status de uma aplicação arrastando fisicamente o *Card* de uma coluna para a outra. O `onDragEnd` processa a mudança na UI de forma Otimista e em segundo plano comunica a API Backend para persistir a mudança de status da vaga no banco de dados da aplicação.
+
+---
+
+## 6. Exportação para IAs (Interoperabilidade de Dados)
+
+Pensando no fluxo moderno de busca por empregos, o **Job Tracker** foi desenhado para tratar o currículo do usuário não como um documento estático PDF, mas sim como um conjunto de **dados estruturados (JSON)** armazenados de forma persistente.
+
+Isso habilita uma funcionalidade extremamente poderosa: a capacidade de exportar ou copiar o *payload* (o JSON) do currículo em "cru" com um clique. 
+
+**Caso de Uso Real (Engenharia de Prompt):**
+Um candidato encontra a vaga dos sonhos, mas percebe que a descrição de suas experiências precisa destacar palavras-chave específicas daquela empresa.
+Ele copia o JSON do seu currículo do *Job Tracker* e fornece a uma inteligência artificial generativa (como ChatGPT, Claude ou Gemini) com o seguinte comando:
+> *"Aja como um recrutador sênior. Aqui estão os dados do meu currículo no formato estruturado JSON. Eu copiei os requisitos da Vaga X. Reescreva as descrições da minha experiência no JSON dando ênfase nas habilidades requeridas pela vaga sem inventar dados, e me devolva o JSON validado."*
+
+Uma vez devolvido o código, o usuário apenas "substitui" a carga de dados de volta no *Job Tracker* (ou em ferramentas que aceitem importação JSON), e a aplicação compila automaticamente em um novo PDF lindamente diagramado, perfeitamente adaptado para o filtro do ATS (Applicant Tracking System) daquela empresa contratante.
+
+Isso transforma a aplicação de um simples "gerador de PDFs" em um verdadeiro **Hub de Gerenciamento de Dados de Carreira Assistido por IA**.
