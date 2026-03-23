@@ -67,6 +67,44 @@ const ResumeHistoryModal = ({
     const [jsonContent, setJsonContent] = useState('');
     const [error, setError] = useState(null);
 
+    // Helper to normalize JSON aliases
+    const normalizeResumeData = (data) => {
+        const normalized = { ...data };
+
+        // Normalize Education
+        if (Array.isArray(normalized.education)) {
+            normalized.education = normalized.education.map(edu => ({
+                course: edu.course || edu.degree || edu.major || "Curso",
+                institution: edu.institution || edu.school || edu.university || "Instituição",
+                status: edu.status || edu.expected_graduation || edu.period || edu.date || "Status"
+            }));
+        }
+
+        // Normalize Experience
+        if (Array.isArray(normalized.experience)) {
+            normalized.experience = normalized.experience.map(exp => ({
+                role: exp.role || exp.position || exp.title || "Cargo",
+                company: exp.company || exp.employer || "Empresa",
+                period: exp.period || exp.dates || exp.duration || "Período",
+                bullets: exp.bullets || exp.responsibilities || exp.description || [],
+                forcePageBreak: exp.forcePageBreak || false
+            }));
+        }
+
+        // Normalize Contact
+        if (normalized.contact) {
+            normalized.contact = {
+                email: normalized.contact.email || "",
+                phone: normalized.contact.phone || "",
+                location: normalized.contact.location || "",
+                linkedin: normalized.contact.linkedin || "",
+                github: normalized.contact.github || ""
+            };
+        }
+
+        return normalized;
+    };
+
     const handleCreate = () => {
         if (newResumeName.trim()) {
             onCreate(newResumeName);
@@ -83,12 +121,14 @@ const ResumeHistoryModal = ({
 
         try {
             const parsed = JSON.parse(jsonContent);
+            const normalized = normalizeResumeData(parsed);
+
             // Basic validation
-            if (!parsed.name || !parsed.experience) {
-                throw new Error("JSON parece inválido ou incompleto (falta name ou experience).");
+            if (!normalized.name || !normalized.experience) {
+                throw new Error("JSON parece inválido ou incompleto (falta campo 'name' ou 'experience').");
             }
 
-            onCreate(newResumeName, parsed);
+            onCreate(newResumeName, normalized);
             resetState();
         } catch (e) {
             setError("Erro ao processar JSON: " + e.message);
@@ -104,10 +144,12 @@ const ResumeHistoryModal = ({
         setError(null);
         try {
             const parsed = JSON.parse(jsonContent);
-            if (!parsed.name || !parsed.experience) {
-                throw new Error("JSON parece inválido ou incompleto (falta name ou experience).");
+            const normalized = normalizeResumeData(parsed);
+
+            if (!normalized.name || !normalized.experience) {
+                throw new Error("JSON parece inválido ou incompleto (falta campo 'name' ou 'experience').");
             }
-            onUpdate(editingResumeId, parsed);
+            onUpdate(editingResumeId, normalized);
             resetState();
         } catch (e) {
             setError("Erro ao processar JSON: " + e.message);
@@ -119,6 +161,13 @@ const ResumeHistoryModal = ({
         setNewResumeName(resume.title);
         setJsonContent(JSON.stringify(resume.data, null, 2));
         setMode('edit');
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(jsonContent);
+        const originalText = "Copiar JSON";
+        // Temporary feedback could be added here if needed
+        alert("JSON copiado para a área de transferência!");
     };
 
     const resetState = () => {
@@ -231,6 +280,7 @@ const ResumeHistoryModal = ({
                             {error && <div className="error-msg">{error}</div>}
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <button onClick={handleImport} className="confirm-create" style={{ flex: 1 }}>Importar JSON</button>
+                                {jsonContent && <button onClick={handleCopy} className="cancel-create" style={{ flex: 1, backgroundColor: '#e0e7ff', color: '#4338ca' }}>Copiar JSON</button>}
                                 <button onClick={resetState} className="cancel-create">Cancelar</button>
                             </div>
                         </div>
@@ -251,6 +301,7 @@ const ResumeHistoryModal = ({
                             {error && <div className="error-msg">{error}</div>}
                             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                                 <button onClick={handleSaveEdit} className="confirm-create" style={{ flex: 1, backgroundColor: '#10b981' }}>Salvar Alterações</button>
+                                <button onClick={handleCopy} className="cancel-create" style={{ flex: 1, backgroundColor: '#e0e7ff', color: '#4338ca' }}>Copiar JSON</button>
                                 <button onClick={resetState} className="cancel-create">Cancelar</button>
                             </div>
                         </div>
