@@ -56,11 +56,13 @@ const ResumeHistoryModal = ({
     onSelect,
     onCreate,
     onDuplicate,
-    onDelete
+    onDelete,
+    onUpdate
 }) => {
     if (!isOpen) return null;
 
-    const [mode, setMode] = useState('list'); // 'list', 'create', 'import'
+    const [mode, setMode] = useState('list'); // 'list', 'create', 'import', 'edit'
+    const [editingResumeId, setEditingResumeId] = useState(null);
     const [newResumeName, setNewResumeName] = useState('');
     const [jsonContent, setJsonContent] = useState('');
     const [error, setError] = useState(null);
@@ -98,15 +100,37 @@ const ResumeHistoryModal = ({
         setError(null);
     };
 
+    const handleSaveEdit = () => {
+        setError(null);
+        try {
+            const parsed = JSON.parse(jsonContent);
+            if (!parsed.name || !parsed.experience) {
+                throw new Error("JSON parece inválido ou incompleto (falta name ou experience).");
+            }
+            onUpdate(editingResumeId, parsed);
+            resetState();
+        } catch (e) {
+            setError("Erro ao processar JSON: " + e.message);
+        }
+    };
+
+    const handleOpenEdit = (resume) => {
+        setEditingResumeId(resume.id);
+        setNewResumeName(resume.title);
+        setJsonContent(JSON.stringify(resume.data, null, 2));
+        setMode('edit');
+    };
+
     const resetState = () => {
         setNewResumeName('');
         setJsonContent('');
         setError(null);
         setMode('list');
+        setEditingResumeId(null);
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && mode !== 'edit' && mode !== 'import') {
             if (mode === 'create') handleCreate();
         }
     }
@@ -135,6 +159,13 @@ const ResumeHistoryModal = ({
                                         </span>
                                     </div>
                                     <div className="resume-actions">
+                                        <button
+                                            title="Ver e Editar JSON"
+                                            onClick={(e) => { e.stopPropagation(); handleOpenEdit(resume); }}
+                                            className="action-btn duplicate"
+                                        >
+                                            {`{ }`} JSON
+                                        </button>
                                         <button
                                             title="Duplicar este currículo"
                                             onClick={(e) => { e.stopPropagation(); onDuplicate(resume.id); }}
@@ -200,6 +231,26 @@ const ResumeHistoryModal = ({
                             {error && <div className="error-msg">{error}</div>}
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <button onClick={handleImport} className="confirm-create" style={{ flex: 1 }}>Importar JSON</button>
+                                <button onClick={resetState} className="cancel-create">Cancelar</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {mode === 'edit' && (
+                        <div className="import-area">
+                            <div className="edit-json-header" style={{ marginBottom: '10px' }}>
+                                <h3>Editando JSON de: <strong>{newResumeName}</strong></h3>
+                                <p style={{ fontSize: '0.8rem', color: '#6b7280', margin: '4px 0' }}>Altere o JSON abaixo para atualizar o conteúdo do currículo.</p>
+                            </div>
+                            <textarea
+                                className="import-textarea"
+                                value={jsonContent}
+                                onChange={(e) => setJsonContent(e.target.value)}
+                                style={{ height: '300px', fontFamily: 'monospace', fontSize: '12px' }}
+                            />
+                            {error && <div className="error-msg">{error}</div>}
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                <button onClick={handleSaveEdit} className="confirm-create" style={{ flex: 1, backgroundColor: '#10b981' }}>Salvar Alterações</button>
                                 <button onClick={resetState} className="cancel-create">Cancelar</button>
                             </div>
                         </div>

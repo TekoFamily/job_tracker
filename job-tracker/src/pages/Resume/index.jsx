@@ -312,6 +312,23 @@ const Resume = () => {
     }
   };
 
+  // Update Resume Data from External Source (like JSON Import)
+  const handleUpdateResume = (id, newData) => {
+    const updatedResumes = resumes.map(r =>
+      r.id === id
+        ? { ...r, data: newData, lastModified: new Date().toISOString() }
+        : r
+    );
+
+    setResumes(updatedResumes);
+    localStorage.setItem('jobTracker_resumes', JSON.stringify(updatedResumes));
+
+    // If it's the active one, update current view
+    if (id === activeResumeId) {
+      setResumeData(newData);
+    }
+  };
+
   const handleReset = () => {
     if (window.confirm("Deseja resetar o currículo para os dados padrão do código? Isso apagará suas edições locais para este perfil.")) {
       updateActiveResume(INITIAL_RESUME_DATA);
@@ -363,6 +380,7 @@ const Resume = () => {
         onCreate={handleCreateResume}
         onDuplicate={handleDuplicateResume}
         onDelete={handleDeleteResume}
+        onUpdate={handleUpdateResume}
       />
 
       <div className="actions-bar no-print">
