@@ -3,7 +3,6 @@ import { Toaster } from 'sonner';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
 import Resume from './pages/Resume';
 import Jobs from './pages/Jobs';
 import { getCurrentUser } from './services/auth';
@@ -32,11 +31,6 @@ function App() {
           </PrivateRoute>
         } />
 
-        <Route path="/profile" element={
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        } />
 
         <Route path="/resume" element={
           <PrivateRoute>

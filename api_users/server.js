@@ -1,12 +1,23 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from './generated/prisma/index.js';
 
+// Capturar erros fatais
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+});
+
 const prisma = new PrismaClient();
 const app = express();
-const JWT_SECRET = 'your-secret-key'; // Em produção, use variáveis de ambiente
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -180,6 +191,12 @@ app.delete('/vagas/:id', authenticateToken, async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+app.listen(PORT, async () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+    try {
+        await prisma.$connect();
+        console.log('Banco de dados conectado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao conectar ao banco de dados:', error);
+    }
 });

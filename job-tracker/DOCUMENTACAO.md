@@ -99,3 +99,20 @@ Ele copia o JSON do seu currículo do *Job Tracker* e fornece a uma inteligênci
 Uma vez devolvido o código, o usuário apenas "substitui" a carga de dados de volta no *Job Tracker* (ou em ferramentas que aceitem importação JSON), e a aplicação compila automaticamente em um novo PDF lindamente diagramado, perfeitamente adaptado para o filtro do ATS (Applicant Tracking System) daquela empresa contratante.
 
 Isso transforma a aplicação de um simples "gerador de PDFs" em um verdadeiro **Hub de Gerenciamento de Dados de Carreira Assistido por IA**.
+
+---
+
+## 7. Infraestrutura e Deploy (Hospedagem)
+
+Para garantir alta disponibilidade e um fluxo de CI/CD (Integração e Entrega Contínuas) moderno para a aplicação, a arquitetura foi dividida em dois serviços independentes:
+
+### Frontend (User Interface) - Hospedado na Vercel
+- A aplicação React/Vite (o lado visual que o usuário interage) está hospedada na **Vercel**, uma plataforma de ponta otimizada para ecossistemas do Frontend e arquitetura Jamstack.
+- A Vercel constrói (*builds*) automaticamente a aplicação e a distribui globalmente pela sua rede Edge Network. Ao fazermos um `git push` no repositório GitHub para a branch `main`, a Vercel detecta a mudança e faz o deploy do Frontend em segundos (Continuous Deployment).
+- O arquivo `vercel.json` na raiz garante que todas as rotas virtuais (como `/dashboard` ou `/jobs`) não resultem num erro `404 Not Found` ao serem acessadas diretamente pelo navegador, servindo unicamente o `index.html` compilado.
+
+### Backend (API e Banco de Dados) - Hospedado no Render
+- O servidor Node.js/Express, que provê a API REST principal do sistema, as conexões autenticadas e a lógica core com as requisições ao Prisma ORM, está publicado no **Render** (sob a URL de produção `job-tracker-1-e7fg.onrender.com`).
+- A escolha pelo Render reflete um setup comum em plataformas como serviço (PaaS), excelente para abrigar APIs robustas, bancos de dados PostgreSQL gerenciados e fluxos lógicos protegidos, mantendo a responsabilidade do acesso aos dados separada da responsabilidade da entrega da Interface do Usuário.
+
+Essa separação de hospedagem (Frontend na Vercel + Backend no Render) demonstra boas práticas de Desacoplamento de Serviços (Decoupled Architecture), uma forte exigência em empresas estruturadas.

@@ -28,10 +28,6 @@ const Navbar = () => {
                         <LayoutDashboard size={20} />
                         <span>Painel</span>
                     </Link>
-                    <Link to="/profile" className={`nav-item ${isActive('/profile') ? 'active' : ''}`}>
-                        <User size={20} />
-                        <span>Perfil</span>
-                    </Link>
                     <Link to="/resume" className={`nav-item ${isActive('/resume') ? 'active' : ''}`}>
                         <FileText size={20} />
                         <span>Currículo</span>
