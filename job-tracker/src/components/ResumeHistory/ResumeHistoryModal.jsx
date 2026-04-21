@@ -59,13 +59,13 @@ const ResumeHistoryModal = ({
     onDelete,
     onUpdate
 }) => {
-    if (!isOpen) return null;
-
     const [mode, setMode] = useState('list'); // 'list', 'create', 'import', 'edit'
     const [editingResumeId, setEditingResumeId] = useState(null);
     const [newResumeName, setNewResumeName] = useState('');
     const [jsonContent, setJsonContent] = useState('');
     const [error, setError] = useState(null);
+
+    if (!isOpen) return null;
 
     // Helper to normalize JSON aliases
     const normalizeResumeData = (data) => {
