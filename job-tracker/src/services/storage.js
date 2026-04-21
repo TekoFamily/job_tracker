@@ -39,6 +39,16 @@ export const deleteApplication = async (id) => {
   }
 };
 
+export const extractJobMetadata = async (url) => {
+  try {
+    const response = await api.post('/extract-job', { url });
+    return response.data;
+  } catch (error) {
+    console.error('Error extracting job:', error);
+    throw error;
+  }
+};
+
 // Mantemos o perfil no localStorage por enquanto, ou poderíamos mover para o backend também
 export const getProfile = () => {
   const data = localStorage.getItem(PROFILE_KEY);

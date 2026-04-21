@@ -4,7 +4,7 @@ import CardCandidatura from '../../components/CardCandidatura';
 import Modal from '../../components/Modal';
 import Input from '../../components/Form/Input';
 import { Plus, LayoutTemplate, PieChart as PieChartIcon } from 'lucide-react';
-import { getApplications, saveApplication, deleteApplication } from '../../services/storage';
+import { getApplications, saveApplication, deleteApplication, extractJobMetadata } from '../../services/storage';
 import { toast } from 'sonner';
 
 // Drag and Drop
@@ -28,6 +28,7 @@ const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentApp, setCurrentApp] = useState(null);
     const [viewMode, setViewMode] = useState('kanban'); // 'kanban' | 'list'
+    const [isExtracting, setIsExtracting] = useState(false);
 
     useEffect(() => {
         loadApps();
@@ -73,6 +74,33 @@ const Dashboard = () => {
 
     const handleChange = (e) => {
         setCurrentApp({ ...currentApp, [e.target.id]: e.target.value });
+    };
+
+    const handleAutoFill = async () => {
+        if (!currentApp?.link) {
+            toast.error('Cole o link da vaga primeiro!');
+            return;
+        }
+        setIsExtracting(true);
+        toast.info('Buscando dados da vaga...');
+        
+        try {
+            const data = await extractJobMetadata(currentApp.link);
+            setCurrentApp({
+                ...currentApp,
+                company: data.company || currentApp.company,
+                role: data.title || currentApp.role
+            });
+            if (data.company || data.title) {
+                toast.success('Extração concluída!');
+            } else {
+                 toast.warning('Não foi possível identificar dados automaticamente.');
+            }
+        } catch (error) {
+            toast.error('Erro na extração de dados.');
+        } finally {
+            setIsExtracting(false);
+        }
     };
 
     // --- DRAG AND DROP LOGIC ---
@@ -282,7 +310,22 @@ const Dashboard = () => {
                     <form onSubmit={handleSave} className="modal-form">
                         <Input id="company" label="Empresa" value={currentApp?.company || ''} onChange={handleChange} required />
                         <Input id="role" label="Cargo" value={currentApp?.role || ''} onChange={handleChange} required />
-                        <Input id="link" label="Link da Vaga" value={currentApp?.link || ''} onChange={handleChange} />
+                        
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', width: '100%' }}>
+                            <div style={{ flex: 1 }}>
+                                <Input id="link" label="Link da Vaga" value={currentApp?.link || ''} onChange={handleChange} />
+                            </div>
+                            <button 
+                                type="button" 
+                                onClick={handleAutoFill} 
+                                disabled={isExtracting}
+                                className="btn-secondary" 
+                                style={{ height: '42px', padding: '0 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                title="Preencher Emprego e Cargo Automaticamente"
+                            >
+                                {isExtracting ? '⏳' : '🪄 Extrair'}
+                            </button>
+                        </div>
                         <Input id="date" type="date" label="Data de Envio" value={currentApp?.date || ''} onChange={handleChange} required />
 
                         <div className="form-group">

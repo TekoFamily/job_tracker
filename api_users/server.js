@@ -4,6 +4,7 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import * as cheerio from 'cheerio';
 
 // Capturar erros fatais
 process.on('unhandledRejection', (reason, promise) => {
@@ -91,6 +92,94 @@ app.post('/login', async (req, res) => {
 });
 
 // --- ROTAS DE VAGAS (Protegidas) ---
+
+// Rota para extrair título e empresa de uma URL
+app.post('/extract-job', authenticateToken, async (req, res) => {
+    try {
+        const { url } = req.body;
+        if (!url) {
+            return res.status(400).json({ error: 'URL da vaga é obrigatória' });
+        }
+
+        // Simular um navegador para evitar bloqueios simples
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Status HTTP: ${response.status}`);
+        }
+
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
+        // Extrai o título da página ou og:title
+        let title = $('meta[property="og:title"]').attr('content') || $('title').text() || '';
+        let company = '';
+        let role = '';
+
+        // Tentar limpar e deduzir (Ex: "Cargo - Empresa | Site")
+        if (title) {
+            // Remove coisas comuns de fim de título
+            title = title.replace(/\|.*/, '').trim(); 
+            title = title.replace(/ - Vagas\.com.*/i, '').trim();
+            title = title.replace(/ - Gupy/i, '').trim();
+            title = title.replace(/ - InfoJobs/i, '').trim();
+            title = title.replace(/ Remotar/i, '').trim();
+
+            const separators = [' na ', ' at ', ' - '];
+            for (const sep of separators) {
+                if (title.includes(sep)) {
+                    const parts = title.split(sep);
+                    role = parts[0].trim();
+                    company = parts[1].trim();
+                     // Se tiver mais partes ex: "Dev Backend - XPTO - SP"
+                    if (sep === ' - ' && parts.length > 2) {
+                        company = parts[1].trim();
+                    }
+                    break;
+                }
+            }
+
+        // Fallback se não encontrou separador
+        if (!company) {
+            role = title;
+            company = '';
+        }
+
+        // Se for vaga da Gupy e não pegou a empresa direito, tenta pegar pelo subdomínio (ex: empresa.gupy.io)
+        if (url.includes('.gupy.io')) {
+            try {
+                const urlObj = new URL(url);
+                const hostnameParts = urlObj.hostname.split('.');
+                if (hostnameParts.length >= 3 && hostnameParts[hostnameParts.length - 2] === 'gupy') {
+                    // Pega a 'ebs-itservices' de 'ebs-itservices.gupy.io'
+                    let gupyCompany = hostnameParts[0].replace(/-/g, ' ');
+                    // Capitaliza primeira letra de cada palavra
+                    gupyCompany = gupyCompany.replace(/\b\w/g, c => c.toUpperCase());
+                    
+                    company = gupyCompany; // Substituir a empresa (que seria 'Pleno' pelo separador)
+                    if(role.includes(' - ')) {
+                        role = role.split(' - ')[0]; // Pega só o 'Analista DBA/ATG'
+                    }
+                }
+            } catch (e) {
+                // Ignore url parse errors
+            }
+        }
+    }
+
+    res.json({ title: role, company });
+
+    } catch (error) {
+        console.error('Erro na extração de URL:', error);
+        res.status(500).json({ error: 'Não foi possível extrair dados desta URL' });
+    }
+});
 
 // Buscar vagas do usuário logado
 app.get('/vagas', authenticateToken, async (req, res) => {
