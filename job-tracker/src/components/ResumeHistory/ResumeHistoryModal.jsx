@@ -102,6 +102,19 @@ const ResumeHistoryModal = ({
             };
         }
 
+        // Normalize Languages
+        if (Array.isArray(normalized.languages)) {
+            normalized.languages = normalized.languages.map(lang => {
+                if (typeof lang === 'string') return lang;
+                if (lang && typeof lang === 'object') {
+                    const name = lang.language || lang.name || "";
+                    const level = lang.level || lang.proficiency || "";
+                    return [name, level].filter(Boolean).join(' - ');
+                }
+                return String(lang);
+            });
+        }
+
         return normalized;
     };
 
