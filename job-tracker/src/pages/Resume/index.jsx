@@ -841,20 +841,29 @@ const Resume = () => {
         <section className="resume-section">
           <div className="section-title">{t('languages')}</div>
           <div className="section-content">
-            {resumeData.languages.map((lang, i) => (
-              <span key={i}>
-                <span
-                  contentEditable={isEditing}
-                  onBlur={(e) => {
-                    const newLangs = [...resumeData.languages];
-                    newLangs[i] = e.target.innerText;
-                    updateActiveResume({ ...resumeData, languages: newLangs });
-                  }}
-                  suppressContentEditableWarning={true}
-                >{lang}</span>
-                {i < resumeData.languages.length - 1 && " • "}
-              </span>
-            ))}
+            {resumeData.languages.map((lang, i) => {
+              let langStr = lang;
+              if (typeof lang === 'object' && lang !== null) {
+                const name = lang.language || lang.name || "";
+                const level = lang.level || lang.proficiency || "";
+                langStr = [name, level].filter(Boolean).join(' - ');
+              }
+              
+              return (
+                <span key={i}>
+                  <span
+                    contentEditable={isEditing}
+                    onBlur={(e) => {
+                      const newLangs = [...resumeData.languages];
+                      newLangs[i] = e.target.innerText;
+                      updateActiveResume({ ...resumeData, languages: newLangs });
+                    }}
+                    suppressContentEditableWarning={true}
+                  >{langStr}</span>
+                  {i < resumeData.languages.length - 1 && " • "}
+                </span>
+              );
+            })}
           </div>
         </section>
       </div >
